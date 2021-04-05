@@ -6,6 +6,10 @@ class serviCiudad {
     return http.post("/ubicacion", data);
   }
 
+  find() {
+    return http.get("/ubicaciones");
+  }
+
 }
 
 export default new serviCiudad();
