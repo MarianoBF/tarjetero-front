@@ -1,4 +1,4 @@
-import serviCiudad from "../services/serviCiudad_servicio"
+import servicioUbicacion from "../services/Ubicacion_servicio"
 import { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
@@ -15,7 +15,7 @@ function Ubicacion() {
   }
 
     useEffect(() => {
-        serviCiudad.find()
+      servicioUbicacion.listar()
             .then((data)=> {
                 setLista(data.data);
                 console.log(data.data)
@@ -25,7 +25,7 @@ function Ubicacion() {
         }, []);
 
     const listaUbicaciones = lista
-        .sort((item1, item2) => item1.region > item2.region ? 1 : 1)
+        .sort((item1, item2) => item1.region > item2.region ? 1 : -1)
         .sort((item1, item2) => item1.region === item2.region ? item1.pais > item2.pais ? 1 : -1 : "")
         .map((item, i, lis) => {
           return (
@@ -57,8 +57,8 @@ function Ubicacion() {
             pais: entrada.pais,
             ciudad: entrada.ciudad,
           };
-          serviCiudad
-            .create(data)
+          servicioUbicacion
+            .sumar(data)
             .then((response) => {
               console.log(response.data);
             })
@@ -69,7 +69,7 @@ function Ubicacion() {
     return(
     <div>
 
-     <h3>Ubicación</h3>
+     <h3>Región / Ciudad</h3>
 
     <button onClick={cambiarModo}>{!modoAgregar?"Agregar":"Listar"}</button>
 

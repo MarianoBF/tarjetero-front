@@ -1,0 +1,15 @@
+import http from "../http-common";
+
+class servicioEmpresa {
+
+  sumar(data) {
+    return http.post("/empresa", data);
+  }
+
+  listar() {
+    return http.get("/empresas");
+  }
+
+}
+
+export default new servicioEmpresa();

@@ -1,15 +1,15 @@
 import http from "../http-common";
 
-class serviCiudad {
+class servicioUbicacion {
 
-  create(data) {
+  sumar(data) {
     return http.post("/ubicacion", data);
   }
 
-  find() {
+  listar() {
     return http.get("/ubicaciones");
   }
 
 }
 
-export default new serviCiudad();
+export default new servicioUbicacion();

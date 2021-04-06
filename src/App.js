@@ -1,8 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import Ubicacion from "./components/Ubicacion";
-import Usuarios from "./components/Usuarios";
 import Empresas from "./components/Empresas";
+import Usuarios from "./components/Usuarios";
 import Contactos from "./components/Contactos";
 import Configuracion from "./components/Configuracion";
 import { Switch, Route, Link } from "react-router-dom";
