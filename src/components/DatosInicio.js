@@ -38,7 +38,7 @@ export const EMPRESAS = [
     ciudad: "San Pablo",
     direccion: "Av. Paulista 1332",
     email: "empresaA@empresaA.com",
-    teléfono: "+55 51 2131 3212",
+    telefono: "+55 51 2131 3212",
   },
   {
     nombre: "Empresa BB",
@@ -46,7 +46,7 @@ export const EMPRESAS = [
     ciudad: "Buenos Aires",
     direccion: "Mitre 1614 3°",
     email: "empresaB@empresaB.com",
-    teléfono: "+54 11 2131 5122 ext 6664",
+    telefono: "+54 11 2131 5122 ext 6664",
   },
   {
     nombre: "Empresa CC",
@@ -54,7 +54,7 @@ export const EMPRESAS = [
     ciudad: "San Pablo",
     direccion: "Av. Paulista 500",
     email: "empresaC@empresaC.com",
-    teléfono: "+55 51 8520 3212",
+    telefono: "+55 51 8520 3212",
   },
 ];
 

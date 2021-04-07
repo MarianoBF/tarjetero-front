@@ -10,6 +10,17 @@ class servicioEmpresa {
     return http.get("/empresas");
   }
 
+  actualizar(data) {
+    return http.put("/empresa", data);
+  }
+
+  borrar(empresa) {
+    return http.delete("/empresa/" + empresa);
+  }
+
+  borrarTodo() {
+    return http.delete("/empresas");
+  }
 }
 
 export default new servicioEmpresa();

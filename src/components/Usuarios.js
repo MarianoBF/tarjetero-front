@@ -29,7 +29,6 @@ function Usuarios() {
 
   const [entradaLog, setEntradaLog] = useState(valorInicialLog);
 
-
   const manejarInput = (event) => {
     const { name, value } = event.target;
     setEntrada({ ...entrada, [name]: value });
@@ -40,39 +39,42 @@ function Usuarios() {
     setEntradaLog({ ...entradaLog, [name]: value });
   };
 
-    const crearUsuario = (e) => {
-      e.preventDefault();
-      if (entrada.password !== entrada.confirmarPassword) {
-          return alert("Los password no coinciden!")
-      }
-      const data = {
-        nombre: entrada.nombre,
-        apellido: entrada.apellido,
-        email: entrada.email,
-        password: entrada.password,
-        perfil: entrada.perfil,
-      };
-      servicioUsuario
-        .sumar(data)
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch(() => console.log("No se pudo agregar el usuario"));
+  const crearUsuario = (e) => {
+    e.preventDefault();
+    if (entrada.password !== entrada.confirmarPassword) {
+      return alert("Los password no coinciden!");
+    }
+    const data = {
+      nombre: entrada.nombre,
+      apellido: entrada.apellido,
+      email: entrada.email,
+      password: entrada.password,
+      perfil: entrada.perfil,
     };
+    servicioUsuario
+      .sumar(data)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch(() => console.log("No se pudo agregar el usuario"));
+  };
 
   const loguearUsuario = (e) => {
     e.preventDefault();
     const data = {
-      email: entrada.email,
-      password: entrada.password,
+      email: entradaLog.email,
+      password: entradaLog.password,
     };
-    console.log(data)
+    console.log(data);
     servicioUsuario
       .loguear(data)
       .then((response) => {
         console.log(response.data);
       })
-      .catch(() => console.log("No se pudo iniciar sesión"));
+      .catch((error) => {
+        console.log("No se pudo iniciar sesión");
+        console.log(error);
+      });
   };
 
   return (
@@ -89,7 +91,7 @@ function Usuarios() {
           <Form onSubmit={crearUsuario}>
             <Col md={6}>
               <Form.Group>
-              <Form.Label>Nombre: </Form.Label>
+                <Form.Label>Nombre: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entrada.nombre}
@@ -97,7 +99,7 @@ function Usuarios() {
                   name="nombre"
                   required
                 ></Form.Control>
-                               <Form.Label>Apellido: </Form.Label>
+                <Form.Label>Apellido: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entrada.apellido}
@@ -119,9 +121,10 @@ function Usuarios() {
                   value={entrada.password}
                   onChange={manejarInput}
                   name="password"
+                  autoComplete="new-password"
                   required
                 ></Form.Control>
-                                <Form.Label>Confirmar Password: </Form.Label>
+                <Form.Label>Confirmar Password: </Form.Label>
                 <Form.Control
                   type="password"
                   value={entrada.confirmarPassword}
@@ -129,14 +132,18 @@ function Usuarios() {
                   name="confirmarPassword"
                   required
                 ></Form.Control>
-                                <Form.Label>Perfil: </Form.Label>
+                <Form.Label>Perfil: </Form.Label>
                 <Form.Control
-                  type="text"
+                  as="select"
                   value={entrada.perfil}
                   onChange={manejarInput}
                   name="perfil"
                   required
-                ></Form.Control>
+                >
+                  <option></option>
+                  <option>Básico</option>
+                  <option>Admin</option>
+                </Form.Control>
               </Form.Group>
             </Col>
             <Button type="submit">Registro</Button>

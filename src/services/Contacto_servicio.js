@@ -9,6 +9,17 @@ class servicioContacto {
   listar() {
     return http.get("/contactos");
   }
+  actualizar(data) {
+    return http.put("/contacto", data);
+  }
+
+  borrar(empresa) {
+    return http.delete("/contacto/" + empresa);
+  }
+
+  borrarTodo() {
+    return http.delete("/contactos");
+  }
 
 }
 
