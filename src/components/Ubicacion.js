@@ -17,7 +17,7 @@ function Ubicacion() {
         setLista(data.data);
         console.log(data.data);
       })
-      .catch(() => console.log("No se pudo traer la informcación"));
+      .catch(() => console.log("No se pudo traer la información"));
   }, []);
 
   const valorInicial = {
@@ -58,7 +58,6 @@ function Ubicacion() {
   const manejarBorrar = ciudad => {
     try {
       servicioUbicacion.borrar(ciudad);
-      console.log(ciudad);
     } catch {
       console.log("No se pudo borrar la ubicación");
     } finally {
@@ -129,36 +128,19 @@ function Ubicacion() {
           </td>
           <td>{item.ciudad}</td>
           <td>
-            {i >= 1 ? (
-              item.region === lis[i - 1].region ? (
-                ""
-              ) : (
-                <p
-                  onClick={() =>
-                    manejarEditar(item.region, item.pais, item.ciudad)
-                  }>
-                  Editar
-                </p>
-              )
-            ) : (
+            {
               <p
                 onClick={() =>
                   manejarEditar(item.region, item.pais, item.ciudad)
                 }>
                 Editar
               </p>
-            )}
+            }
           </td>
           <td>
-            {i >= 1 ? (
-              item.region === lis[i - 1].region ? (
-                ""
-              ) : (
-                <p onClick={() => manejarBorrar(item.ciudad)}>Borrar</p>
-              )
-            ) : (
+            {
               <p onClick={() => manejarBorrar(item.ciudad)}>Borrar</p>
-            )}
+            }
           </td>
         </tr>
       );

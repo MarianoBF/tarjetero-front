@@ -1,9 +1,6 @@
 import servicioContacto from "../services/Contacto_servicio";
 import { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
 import ContactosBuscador from "./ContactosBuscador";
 import ContactosAgregar from "./ContactosAgregar";
 

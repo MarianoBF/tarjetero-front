@@ -17,7 +17,7 @@ function Ubicacion() {
         setLista(data.data);
         console.log(data.data);
       })
-      .catch(() => console.log("No se pudo traer la informcación"));
+      .catch(() => console.log("No se pudo traer la información"));
   }, []);
 
   const valorInicial = {
