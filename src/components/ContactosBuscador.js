@@ -4,40 +4,25 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 
 function ContactosBuscador(props) {
-  const buscarContacto = e => {
-    e.preventDefault();
-    const results = props.lista.filter(
-      item =>
-        item.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-        item.apellido.toLowerCase().includes(busqueda.toLowerCase())
-    );
-    console.log(results);
-  };
 
-  const [busqueda, setBusqueda] = useState("");
-
-  const manejarInput = e => {
-    setBusqueda(e.target.value);
-    if (e.target.value > 2) {
-      buscarContacto();
-    }
-  };
+  const filtrador = (e) => {
+    props.onChange(e.target.value)
+  }
 
   return (
     <div>
-      <Form inline onSubmit={buscarContacto}>
+      <Form inline onSubmit={null}>
         <Col md={6}>
           <Form.Group>
             <Form.Label>Ingrese busqueda: </Form.Label>
             <Form.Control
               type="text"
-              value={busqueda}
-              onChange={manejarInput}
+              value={props.busqueda}
+              onChange={filtrador}
               name="nombre"
               required></Form.Control>
           </Form.Group>
         </Col>
-        <Button type="submit">Buscar</Button>
       </Form>
     </div>
   );

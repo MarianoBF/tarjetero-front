@@ -66,7 +66,7 @@ export const CONTACTOS = [
     empresa: "Empresa CC",
     cargo: "Director de Compras",
     canalPreferido: "email",
-    interes: "30%",
+    interes: "25",
 },
 {
     nombre: "Juan",
@@ -75,7 +75,7 @@ export const CONTACTOS = [
     empresa: "Empresa AA",
     cargo: "Gerente de Compras",
     canalPreferido: "telefono",
-    interes: "60%",
+    interes: "50",
 },
 {
     nombre: "Juan",
@@ -84,7 +84,7 @@ export const CONTACTOS = [
     empresa: "Empresa AA",
     cargo: "Gerente de Finanzas",
     canalPreferido: "email",
-    interes: "50%",
+    interes: "100",
 },
 ]
 

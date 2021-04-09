@@ -19,7 +19,6 @@ function Contactos() {
     pais: "",
     ciudad: "",
     interes: "50",
-    canales: [{canal: "a", cuenta: "b", preferencias: "c"}],
     canalPreferido: "",
   };
 
@@ -85,10 +84,9 @@ function Contactos() {
 
   const ciudadRef = useRef(null);
 
-  const ciudades = 
-    listaUbicaciones
-      .filter(item => item.pais === entrada.pais)
-      .map(item => item.ciudad)
+  const ciudades = listaUbicaciones
+    .filter(item => item.pais === entrada.pais)
+    .map(item => item.ciudad);
 
   const elegirListaCiudades = ciudades.map(item => {
     return <option>{item}</option>;
@@ -99,7 +97,18 @@ function Contactos() {
     setEntrada({...entrada, [name]: value});
   };
 
-  const guardarEmpresa = e => {
+  const initialValueCanales = [{canal: "", cuenta: "", preferencia: ""}];
+
+  const [valoresCanales, setValoresCanales] = useState(initialValueCanales);
+
+  const manejarInputCanales = (event, i) => {
+    const {name, value} = event.target;
+    let actualizado = [...valoresCanales];
+    actualizado[i][name] = value;
+    setValoresCanales(actualizado);
+  };
+
+  const guardarContacto = e => {
     e.preventDefault();
     const data = {
       nombre: entrada.nombre,
@@ -111,9 +120,12 @@ function Contactos() {
       pais: entrada.ciudad,
       ciudad: entrada.ciudad,
       interes: entrada.interes,
-      canales: entrada.canales,
-      canalPreferido: entrada.canalPreferido,
+      canales: [...valoresCanales],
+      canalPreferido: valoresCanales.filter(
+        item => item.preferencia === "Canal favorito"
+      ).canal,
     };
+    console.log(data);
     servicioContacto
       .sumar(data)
       .then(response => {
@@ -122,52 +134,66 @@ function Contactos() {
       .catch(() => console.log("No se pudo agregar el contacto"));
   };
 
-  const [canales, setCanales] = useState([1]);
+  const [cantidadCanales, setCantidadCanales] = useState([1]);
 
-  const CanalesContacto = canales.map((x, i) => {
+  const CanalesContacto = cantidadCanales.map((x, i) => {
     return (
       <Form.Group>
         <Form.Label>Canales de Contacto: </Form.Label>
         <Form.Control
-          type="text"
-          value={entrada.canales[i].canal}
-          onChange={manejarInput}
-          name={`canalesCanal${i}`}
-          required></Form.Control>
+          as="select"
+          value={valoresCanales[i].canal}
+          onChange={e => manejarInputCanales(e, i)}
+          name={"canal"}
+          required>
+          <option></option>
+          <option>Whatsapp</option>
+          <option>Teléfono</option>
+          <option>Email</option>
+          <option>Facebook</option>
+          <option>Twitter</option>
+        </Form.Control>
         <Form.Label>Cuenta de usuario: </Form.Label>
         <Form.Control
           type="text"
-          value={entrada.canales[i].cuenta}
-          onChange={manejarInput}
-          name={`canalesCuenta${i}`}
+          value={valoresCanales[i].cuenta}
+          onChange={e => manejarInputCanales(e, i)}
+          name={`cuenta`}
           required></Form.Control>
-        <Form.Label>Preferencias: </Form.Label>
+        <Form.Label>Preferencia: </Form.Label>
         <Form.Control
-          type="text"
-          value={entrada.canales[i].preferencias}
-          onChange={manejarInput}
-          name={`canalesPreferencias${i}`}
-          required></Form.Control>
+          as="select"
+          value={valoresCanales[i].preferencia}
+          onChange={e => manejarInputCanales(e, i)}
+          name={`preferencia`}
+          required>
+          <option></option>
+          <option>No molestar</option>
+          <option>Sin preferencia</option>
+          <option>Canal preferido</option>
+        </Form.Control>
       </Form.Group>
     );
   });
 
   const agregarCanal = () => {
-    setCanales([...canales, 1]);
-    setEntrada({
-      ...entrada,
-      canales: [
-        ...entrada.canales,
-        {canal: "a", cuenta: "b", preferencias: "c"},
-      ],
-    });
-    console.log(entrada.canales);
+    setCantidadCanales([...cantidadCanales, 1]);
+    setValoresCanales([
+      ...valoresCanales,
+      {canal: "", cuenta: "", preferencia: ""},
+    ]);
+  };
+
+  const removerCanal = () => {
+    let actual = [...cantidadCanales];
+    actual.pop();
+    setCantidadCanales(actual);
   };
 
   return (
     <div>
       <h3>Agregar Contacto:</h3>
-      <Form inline onSubmit={guardarEmpresa}>
+      <Form inline onSubmit={guardarContacto}>
         <Col md={10}>
           <Form.Group>
             <Form.Label>Nombre: </Form.Label>
@@ -194,9 +220,9 @@ function Contactos() {
             <Form.Label>Email: </Form.Label>
             <Form.Control
               type="text"
-              value={entrada.cargo}
+              value={entrada.email}
               onChange={manejarInput}
-              name="cargo"
+              name="email"
               required></Form.Control>
             <Form.Label>Compañía: </Form.Label>
             <Form.Control
@@ -243,16 +269,16 @@ function Contactos() {
               ref={ciudadRef}
               required
               disabled>
-                            <option></option>
+              <option></option>
 
-                {elegirListaCiudades}
-              </Form.Control>
+              {elegirListaCiudades}
+            </Form.Control>
             <Form.Label>Dirección: </Form.Label>
             <Form.Control
               type="text"
               value={entrada.direccion}
               onChange={manejarInput}
-              name="cargo"
+              name="direccion"
               required></Form.Control>
             <Form.Label>Interés: </Form.Label>
             <Col md={4}>
@@ -283,6 +309,7 @@ function Contactos() {
           {CanalesContacto}
 
           <Button onClick={agregarCanal}>Agregar canal</Button>
+          <Button onClick={removerCanal}>Quitar canal</Button>
         </Col>
 
         <Button type="submit">Guardar</Button>

@@ -7,7 +7,9 @@ import ContactosAgregar from "./ContactosAgregar";
 
 function Contactos() {
   const [lista, setLista] = useState([]);
+  const [results, setResults] = useState([])
   const [modoAgregar, setModoAgregar] = useState(false);
+  
 
   const cambiarModo = () => {
     setModoAgregar(!modoAgregar);
@@ -18,14 +20,14 @@ function Contactos() {
       .listar()
       .then((data) => {
         setLista(data.data);
-        console.log(data.data);
+        setResults(data.data);
       })
       .catch(() => console.log("No se pudo traer la información"));
   }, []);
 
 
 
-  const listaContactos = lista
+  const listaContactos = results
     .sort((item1, item2) => (item1.nombre > item2.nombre ? 1 : -1))
     .map((item, i, lis) => {
       return (
@@ -41,11 +43,22 @@ function Contactos() {
       );
     });
 
+    const filtrador = (filtro) => {
+      setResults(lista.filter(
+        item =>
+          item.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
+          item.apellido.toLowerCase().includes(filtro.toLowerCase()) || 
+          item.ciudad.toLowerCase().includes(filtro.toLowerCase()) || 
+          item.empresa.toLowerCase().includes(filtro.toLowerCase()) || 
+          item.cargo.toLowerCase().includes(filtro.toLowerCase()) 
+      ));
+    }
+
   return (
     <div>
       <h3>Contactos</h3>
 
-      <ContactosBuscador lista={lista}/>
+      {!modoAgregar?<ContactosBuscador lista={lista} onChange={filtrador}/>:null}
 
       <button onClick={cambiarModo}>
         {!modoAgregar ? "Agregar" : "Listar"}
