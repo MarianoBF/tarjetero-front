@@ -72,6 +72,12 @@ function Ubicacion() {
     }
   };
 
+  const manejarCancelar = () => {
+    setEntrada();
+    setModoEditar(false);
+    setModoAgregar(false);
+  }
+
   const listaEmpresas = lista
     .sort((item1, item2) => (item1.pais > item2.pais ? 1 : -1))
     .map((item, i, lis) => {
@@ -224,7 +230,8 @@ function Ubicacion() {
                   required></Form.Control>
               </Form.Group>
             </Col>
-            <Button type="submit">Guardar</Button>
+            <Button type="submit">Guardar</Button>{" "}
+            <Button onClick={manejarCancelar} variant="danger">Cancelar</Button>
           </Form>
         </div>
       ) : null}
@@ -279,6 +286,8 @@ function Ubicacion() {
               </Form.Group>
             </Col>
             <Button type="submit">Guardar</Button>
+            {" "}
+            <Button onClick={manejarCancelar} variant="danger">Cancelar</Button>
           </Form>
         </div>
       ) : null}
