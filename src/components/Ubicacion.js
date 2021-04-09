@@ -66,6 +66,12 @@ function Ubicacion() {
     }
   };
 
+  const manejarCancelar = () => {
+    setEntrada();
+    setModoEditar(false);
+    setModoAgregar(false);
+  }
+
   const editarUbicacion = e => {
     e.preventDefault();
     const data = {
@@ -215,7 +221,8 @@ function Ubicacion() {
                   required></Form.Control>
               </Form.Group>
             </Col>
-            <Button type="submit">Guardar</Button>
+            <Button type="submit">Agregar</Button>{" "}
+            <Button onClick={manejarCancelar} variant="danger">Cancelar</Button>
           </Form>
         </div>
       ) : null}
@@ -248,7 +255,9 @@ function Ubicacion() {
                   required></Form.Control>
               </Form.Group>
             </Col>
-            <Button type="submit">Guardar</Button>
+            <Button type="submit">Guardar</Button>{" "}
+            <Button onClick={manejarCancelar} variant="danger">Cancelar</Button>
+
           </Form>
         </div>
       ) : null}
