@@ -1,13 +1,29 @@
 import servicioContacto from "../services/Contacto_servicio";
 import servicioEmpresa from "../services/Empresa_servicio";
-import {useState, useEffect} from "react";
+import servicioUbicacion from "../services/Ubicacion_servicio";
+import {useState, useEffect, useRef} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 
-
 function Contactos() {
   const [listaEmpresas, setListaEmpresas] = useState([]);
+
+  const valorInicial = {
+    nombre: "",
+    apellido: "",
+    empresa: "",
+    cargo: "",
+    email: "",
+    region: "",
+    pais: "",
+    ciudad: "",
+    interes: "50",
+    canales: [{canal: "a", cuenta: "b", preferencias: "c"}],
+    canalPreferido: "",
+  };
+
+  const [entrada, setEntrada] = useState(valorInicial);
 
   useEffect(() => {
     servicioEmpresa
@@ -23,21 +39,60 @@ function Contactos() {
     return <option>{item.nombre}</option>;
   });
 
-  const valorInicial = {
-    nombre: "",
-    apellido: "",
-    empresa: "",
-    cargo: "",
-    email: "",
-    region: "",
-    pais: "",
-    ciudad: "",
-    interes: "",
-    canales: [{canal: "a", cuenta: "b", preferencias: "c"}],
-    canalPreferido: "",
+  const [listaUbicaciones, setListaUbicaciones] = useState([]);
+
+  useEffect(() => {
+    servicioUbicacion
+      .listar()
+      .then(data => {
+        setListaUbicaciones(data.data);
+        console.log(data.data);
+      })
+      .catch(() => console.log("No se pudo traer la información"));
+  }, []);
+
+  const regiones = new Set(listaUbicaciones.map(item => item.region));
+
+  const elegirListaRegiones = Array.from(regiones).map(item => {
+    return <option>{item}</option>;
+  });
+
+  const paisRef = useRef(null);
+
+  const manejarElegirRegion = e => {
+    e.target.value !== ""
+      ? (paisRef.current.disabled = false)
+      : (paisRef.current.disabled = true);
+    setEntrada({...entrada, region: e.target.value, pais: "", ciudad: ""});
   };
 
-  const [entrada, setEntrada] = useState(valorInicial);
+  const paises = new Set(
+    listaUbicaciones
+      .filter(item => item.region === entrada.region)
+      .map(item => item.pais)
+  );
+
+  const elegirListaPaises = Array.from(paises).map(item => {
+    return <option>{item}</option>;
+  });
+
+  const manejarElegirPais = e => {
+    e.target.value !== ""
+      ? (ciudadRef.current.disabled = false)
+      : (ciudadRef.current.disabled = true);
+    setEntrada({...entrada, pais: e.target.value});
+  };
+
+  const ciudadRef = useRef(null);
+
+  const ciudades = 
+    listaUbicaciones
+      .filter(item => item.pais === entrada.pais)
+      .map(item => item.ciudad)
+
+  const elegirListaCiudades = ciudades.map(item => {
+    return <option>{item}</option>;
+  });
 
   const manejarInput = event => {
     const {name, value} = event.target;
@@ -159,25 +214,39 @@ function Contactos() {
           <Form.Group>
             <Form.Label>Región: </Form.Label>
             <Form.Control
-              type="text"
+              as="select"
               value={entrada.region}
-              onChange={manejarInput}
-              name="nombre"
-              required></Form.Control>
+              onChange={manejarElegirRegion}
+              name="region"
+              required>
+              <option></option>
+              {elegirListaRegiones}
+            </Form.Control>
             <Form.Label>País: </Form.Label>
             <Form.Control
-              type="text"
+              as="select"
               value={entrada.pais}
-              onChange={manejarInput}
-              name="apellido"
-              required></Form.Control>
+              onChange={manejarElegirPais}
+              name="pais"
+              ref={paisRef}
+              required
+              disabled>
+              <option></option>
+              {elegirListaPaises}
+            </Form.Control>
             <Form.Label>Ciudad: </Form.Label>
             <Form.Control
-              type="text"
+              as="select"
               value={entrada.ciudad}
               onChange={manejarInput}
-              name="empresa"
-              required></Form.Control>
+              name="ciudad"
+              ref={ciudadRef}
+              required
+              disabled>
+                            <option></option>
+
+                {elegirListaCiudades}
+              </Form.Control>
             <Form.Label>Dirección: </Form.Label>
             <Form.Control
               type="text"
@@ -186,15 +255,27 @@ function Contactos() {
               name="cargo"
               required></Form.Control>
             <Form.Label>Interés: </Form.Label>
-            <Form.Control
-              type="range"
-              min="0"
-              max="100"
-              step="25"
-              value={entrada.interes}
-              onChange={manejarInput}
-              name="interes"
-              required></Form.Control>
+            <Col md={4}>
+              <Form.Control
+                type="range"
+                min="0"
+                max="100"
+                step="25"
+                value={entrada.interes}
+                onChange={manejarInput}
+                name="interes"
+                required></Form.Control>
+            </Col>
+
+            <Col md={1}>
+              <Form.Control
+                size="sm"
+                type="text"
+                value={entrada.interes}
+                onChange={manejarInput}
+                name="interes"
+                required></Form.Control>
+            </Col>
           </Form.Group>
         </Col>
 
