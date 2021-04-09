@@ -29,7 +29,6 @@ function Contactos() {
       .listar()
       .then(data => {
         setListaEmpresas(data.data);
-        console.log(data.data);
       })
       .catch(() => console.log("No se pudo traer la información"));
   }, []);
@@ -45,7 +44,6 @@ function Contactos() {
       .listar()
       .then(data => {
         setListaUbicaciones(data.data);
-        console.log(data.data);
       })
       .catch(() => console.log("No se pudo traer la información"));
   }, []);
@@ -125,7 +123,6 @@ function Contactos() {
         item => item.preferencia === "Canal favorito"
       ).canal,
     };
-    console.log(data);
     servicioContacto
       .sumar(data)
       .then(response => {
@@ -138,7 +135,7 @@ function Contactos() {
 
   const CanalesContacto = cantidadCanales.map((x, i) => {
     return (
-      <Form.Group>
+      <Form.Group id={x}>
         <Form.Label>Canales de Contacto: </Form.Label>
         <Form.Control
           as="select"

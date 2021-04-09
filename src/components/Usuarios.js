@@ -65,7 +65,6 @@ function Usuarios() {
       email: entradaLog.email,
       password: entradaLog.password,
     };
-    console.log(data);
     servicioUsuario
       .loguear(data)
       .then((response) => {

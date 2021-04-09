@@ -64,7 +64,6 @@ function Ubicacion() {
   const manejarBorrar = nombre => {
     try {
       servicioEmpresa.borrar(nombre);
-      console.log(nombre);
     } catch {
       console.log("No se pudo borrar la ubicación");
     } finally {
