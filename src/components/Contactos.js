@@ -64,8 +64,7 @@ function Contactos() {
 
   const manejarBorrar = (id, nombre, apellido) => {
     setModalBorrar(true);
-    setContactoParaBorrar({id: id, nombre: nombre, apellido: apellido})
-    console.log(contactoParaBorrar)
+    setContactoParaBorrar({id: id, nombre: nombre, apellido: apellido});
   };
 
   const manejarCerrarBorrar = item => {
@@ -83,11 +82,55 @@ function Contactos() {
     }
   };
 
+  const initialCheckboxes = [
+    {id: "", checked: "false"},
+    {id: "", checked: "false"},
+    {id: "", checked: "false"},
+    {id: "", checked: "false"},
+    {id: "", checked: "false"},
+    {id: "", checked: "false"},
+    {id: "", checked: "false"},
+    {id: "", checked: "false"},
+    {id: "", checked: "false"},
+    {id: "", checked: "false"},
+  ];
+
+  const [checkboxes, setCheckboxes] = useState(initialCheckboxes);
+  const [checkboxesActivos, setCheckboxesActivos] = useState(false);
+
+  const manejarCheckbox = (e, id, i) => {
+    let nuevosCheckboxes = [...checkboxes];
+    nuevosCheckboxes[i].id = id;
+    nuevosCheckboxes[i].checked = e.target.checked;
+    setCheckboxes(nuevosCheckboxes);
+    checkboxes.filter((item)=>item.checked===true).length>0?setCheckboxesActivos(true):setCheckboxesActivos(false)
+  };
+
+  const borrarCheckboxes = () =>{
+    const borrables = checkboxes.filter((item)=>item.checked===true);
+    console.log(borrables)
+    try {
+      borrables.forEach((item)=>{servicioContacto.borrar(item.id)});
+    } catch {
+      console.log("No se pudo borrar la ubicación");
+    } finally {
+      window.location.reload();
+    }
+  }
+
   const listaContactos = results
     .sort((item1, item2) => (item1.nombre > item2.nombre ? 1 : -1))
     .map((item, i, lis) => {
       return (
         <tr key={item._id}>
+          <td>
+            <input
+              type="checkbox"
+              label=""
+              value={checkboxes[i].checked}
+              onChange={(e) => manejarCheckbox(e, item._id, i)}
+            />
+          </td>
           <td>{item.nombre}</td>
           <td>{item.apellido}</td>
           <td>{item.ciudad}</td>
@@ -103,7 +146,12 @@ function Contactos() {
             <p onClick={() => manejarEditar(item)}>Editar</p>
           </td>
           <td>
-            <p onClick={() => manejarBorrar(item._id, item.nombre, item.apellido)}>Borrar</p>
+            <p
+              onClick={() =>
+                manejarBorrar(item._id, item.nombre, item.apellido)
+              }>
+              Borrar
+            </p>
           </td>
         </tr>
       );
@@ -134,7 +182,7 @@ function Contactos() {
     setModoEditar(false);
     setModoAgregar(false);
     setEntradaEditar(valorInicial);
-  }
+  };
 
   return (
     <div>
@@ -148,11 +196,18 @@ function Contactos() {
         <button onClick={cambiarModo}>Agregar</button>
       ) : null}
 
+      {checkboxesActivos ? (
+        <button onClick={borrarCheckboxes}>Borrar seleccionados</button>
+      ) : null}
+
       {!modoAgregar && !modoEditar ? (
         <div>
           <Table>
             <thead>
               <tr>
+                <th>
+
+                </th>
                 <th>Nombre</th>
                 <th>Apellido</th>
                 <th>Ciudad</th>
@@ -169,10 +224,18 @@ function Contactos() {
         </div>
       ) : null}
       {modoAgregar ? (
-        <ContactosAgregar entrada={valorInicial} editar={modoEditar} cancelar={manejarCancelarEdicion}/>
+        <ContactosAgregar
+          entrada={valorInicial}
+          editar={modoEditar}
+          cancelar={manejarCancelarEdicion}
+        />
       ) : null}
       {modoEditar ? (
-        <ContactosAgregar entrada={entradaEditar} editar={modoEditar} cancelar={manejarCancelarEdicion}/>
+        <ContactosAgregar
+          entrada={entradaEditar}
+          editar={modoEditar}
+          cancelar={manejarCancelarEdicion}
+        />
       ) : null}
 
       {modalCanales && (
@@ -205,7 +268,9 @@ function Contactos() {
             <Modal.Title>Confirma Borrar la entrada?</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>{contactoParaBorrar.nombre + " " + contactoParaBorrar.apellido}</p>
+            <p>
+              {contactoParaBorrar.nombre + " " + contactoParaBorrar.apellido}
+            </p>
             <Button variant="danger" onClick={manejarModalBorrar}>
               Sí, borrar
             </Button>
