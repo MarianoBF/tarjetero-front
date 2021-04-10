@@ -183,12 +183,8 @@ function ContactosAgregar(props) {
     setCantidadCanales(actual);
   };
 
-  const [modoEditar, setModoEditar] = useState(props.editar)
-  console.log(props.editar, props.entrada)
-
   return (
     <div>
-    {/* {!modoEditar ? ( */}
       <div>
       <h3>Agregar Contacto:</h3>
       <Form inline onSubmit={guardarContacto}>
@@ -312,7 +308,11 @@ function ContactosAgregar(props) {
 
         <Button type="submit">Guardar</Button>
       </Form> </div>
-      {/* ): "Editando"} */}
+
+      <Button variant="secondary" onClick={props.cancelar}>
+              Cancelar y regresar al listado
+            </Button>
+
     </div>
   );
 }

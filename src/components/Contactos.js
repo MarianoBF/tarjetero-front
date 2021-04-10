@@ -35,30 +35,53 @@ function Contactos() {
     region: "",
     pais: "",
     ciudad: "",
-    interes: "50",
+    interes: "",
     canalPreferido: "",
   };
 
   const [modalCanales, setModalCanales] = useState(false);
   const [contenidosModalCanales, setContenidosModalCanales] = useState([]);
-  const handleClose = () => setModalCanales(false);
-  const handleShow = item => {
+  const manejarCerrar = () => setModalCanales(false);
+  const manejarMostrar = item => {
     setModalCanales(true);
     setContenidosModalCanales(item);
-    console.log(contenidosModalCanales);
   };
 
   const contenidosMod = contenidosModalCanales.map((item, i) => {
-      return (
-        <tbody>
-          <tr>
-            <td>{contenidosModalCanales[i].canal}</td>
-            <td>{contenidosModalCanales[i].cuenta}</td>
-            <td>{contenidosModalCanales[i].preferencia}</td>
-          </tr>
-        </tbody>
-      );
-    });
+    return (
+      <tbody>
+        <tr>
+          <td>{contenidosModalCanales[i].canal}</td>
+          <td>{contenidosModalCanales[i].cuenta}</td>
+          <td>{contenidosModalCanales[i].preferencia}</td>
+        </tr>
+      </tbody>
+    );
+  });
+
+  const [modalBorrar, setModalBorrar] = useState(false);
+  const [contactoParaBorrar, setContactoParaBorrar] = useState("");
+
+  const manejarBorrar = (id, nombre, apellido) => {
+    setModalBorrar(true);
+    setContactoParaBorrar({id: id, nombre: nombre, apellido: apellido})
+    console.log(contactoParaBorrar)
+  };
+
+  const manejarCerrarBorrar = item => {
+    setModalBorrar(false);
+  };
+
+  const manejarModalBorrar = () => {
+    setModalBorrar(false);
+    try {
+      servicioContacto.borrar(contactoParaBorrar.id);
+    } catch {
+      console.log("No se pudo borrar la ubicación");
+    } finally {
+      window.location.reload();
+    }
+  };
 
   const listaContactos = results
     .sort((item1, item2) => (item1.nombre > item2.nombre ? 1 : -1))
@@ -71,7 +94,7 @@ function Contactos() {
           <td>{item.empresa}</td>
           <td>{item.cargo}</td>
           <td>
-            <p onClick={() => handleShow(item.canales)}>
+            <p onClick={() => manejarMostrar(item.canales)}>
               {item.canalPreferido}
             </p>
           </td>
@@ -80,7 +103,7 @@ function Contactos() {
             <p onClick={() => manejarEditar(item)}>Editar</p>
           </td>
           <td>
-            <p onClick={() => manejarBorrar(item.id)}>Borrar</p>
+            <p onClick={() => manejarBorrar(item._id, item.nombre, item.apellido)}>Borrar</p>
           </td>
         </tr>
       );
@@ -99,16 +122,6 @@ function Contactos() {
     );
   };
 
-  const manejarBorrar = nombre => {
-    try {
-      servicioContacto.borrar(nombre);
-    } catch {
-      console.log("No se pudo borrar la ubicación");
-    } finally {
-      window.location.reload();
-    }
-  };
-
   const [entradaEditar, setEntradaEditar] = useState();
 
   const manejarEditar = item => {
@@ -116,6 +129,12 @@ function Contactos() {
     setModoAgregar(false);
     setEntradaEditar(item);
   };
+
+  const manejarCancelarEdicion = () => {
+    setModoEditar(false);
+    setModoAgregar(false);
+    setEntradaEditar(valorInicial);
+  }
 
   return (
     <div>
@@ -150,14 +169,14 @@ function Contactos() {
         </div>
       ) : null}
       {modoAgregar ? (
-        <ContactosAgregar entrada={valorInicial} editar={modoEditar} />
+        <ContactosAgregar entrada={valorInicial} editar={modoEditar} cancelar={manejarCancelarEdicion}/>
       ) : null}
       {modoEditar ? (
-        <ContactosAgregar entrada={entradaEditar} editar={modoEditar} />
+        <ContactosAgregar entrada={entradaEditar} editar={modoEditar} cancelar={manejarCancelarEdicion}/>
       ) : null}
 
       {modalCanales && (
-        <Modal show={modalCanales} onHide={handleClose}>
+        <Modal show={modalCanales} onHide={manejarCerrar}>
           <Modal.Header closeButton>
             <Modal.Title>Canales de contacto</Modal.Title>
           </Modal.Header>
@@ -174,8 +193,26 @@ function Contactos() {
             </Table>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button variant="secondary" onClick={manejarCerrar}>
               Cerrar
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+      {modalBorrar && (
+        <Modal show={modalBorrar} onHide={manejarCerrarBorrar}>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirma Borrar la entrada?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>{contactoParaBorrar.nombre + " " + contactoParaBorrar.apellido}</p>
+            <Button variant="danger" onClick={manejarModalBorrar}>
+              Sí, borrar
+            </Button>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={manejarCerrarBorrar}>
+              Cancelar
             </Button>
           </Modal.Footer>
         </Modal>
