@@ -33,6 +33,7 @@ const Cargador = () => {
         cargo: contactoEjemplo.cargo,
         canalPreferido: contactoEjemplo.canalPreferido,
         interes: contactoEjemplo.interes,
+        canales: contactoEjemplo.canales
       };
       servicioContacto.sumar(ciudad).then((res) => console.log(res));
     });

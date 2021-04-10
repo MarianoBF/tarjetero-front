@@ -62,29 +62,66 @@ export const CONTACTOS = [
     {
     nombre: "Juan",
     apellido: "Pérez",
+    region: "América del Sur",
+    pais: "Brasil",
     ciudad: "San Pablo",
     empresa: "Empresa CC",
     cargo: "Director de Compras",
-    canalPreferido: "email",
+    canalPreferido: "Whatsapp",
+    canales: [{
+      canal: "Whatsapp",
+      cuenta: "31231231232",
+      preferencia: "Canal preferido"
+    }],
     interes: "25",
 },
 {
     nombre: "Juan",
     apellido: "Garcia",
-    ciudad: "San Pablo",
     empresa: "Empresa AA",
     cargo: "Gerente de Compras",
-    canalPreferido: "telefono",
+    region: "América del Sur",
+    pais: "Brasil",
+    ciudad: "San Pablo",
     interes: "50",
+    canales: [{
+      canal: "Email",
+      cuenta: "dasdas@dasdasd.com",
+      preferencia: "No molestar"
+    },
+    {
+      canal: "Teléfono",
+      cuenta: "5656456564",
+      preferencia: "Canal preferido"
+    },
+  ],
+    canalPreferido: "Teléfono",
 },
 {
     nombre: "Juan",
     apellido: "Gómez",
+    region: "América del Sur",
+    pais: "Brasil",
     ciudad: "San Pablo",
     empresa: "Empresa AA",
     cargo: "Gerente de Finanzas",
-    canalPreferido: "email",
+    canalPreferido: "Email",
     interes: "100",
+    canales: [{
+      canal: "Email",
+      cuenta: "dasdas@dsadasd.com",
+      preferencia: "Canal preferido"
+    },{
+      canal: "Email",
+      cuenta: "13deswda@dasdaa.com",
+      preferencia: "Sin preferencia"
+    },
+    {
+      canal: "Teléfono",
+      cuenta: "5656456564",
+      preferencia: "Sin preferencia"
+    },
+  ],
 },
 ]
 

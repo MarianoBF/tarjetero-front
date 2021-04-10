@@ -1,15 +1,16 @@
 import servicioContacto from "../services/Contacto_servicio";
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import Table from "react-bootstrap/Table";
 import ContactosBuscador from "./ContactosBuscador";
 import ContactosAgregar from "./ContactosAgregar";
-
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 function Contactos() {
   const [lista, setLista] = useState([]);
-  const [results, setResults] = useState([])
+  const [results, setResults] = useState([]);
   const [modoAgregar, setModoAgregar] = useState(false);
-  
+  const [modoEditar, setModoEditar] = useState(false);
 
   const cambiarModo = () => {
     setModoAgregar(!modoAgregar);
@@ -18,14 +19,46 @@ function Contactos() {
   useEffect(() => {
     servicioContacto
       .listar()
-      .then((data) => {
+      .then(data => {
         setLista(data.data);
         setResults(data.data);
       })
       .catch(() => console.log("No se pudo traer la información"));
   }, []);
 
+  const valorInicial = {
+    nombre: "",
+    apellido: "",
+    empresa: "",
+    cargo: "",
+    email: "",
+    region: "",
+    pais: "",
+    ciudad: "",
+    interes: "50",
+    canalPreferido: "",
+  };
 
+  const [modalCanales, setModalCanales] = useState(false);
+  const [contenidosModalCanales, setContenidosModalCanales] = useState([]);
+  const handleClose = () => setModalCanales(false);
+  const handleShow = item => {
+    setModalCanales(true);
+    setContenidosModalCanales(item);
+    console.log(contenidosModalCanales);
+  };
+
+  const contenidosMod = contenidosModalCanales.map((item, i) => {
+      return (
+        <tbody>
+          <tr>
+            <td>{contenidosModalCanales[i].canal}</td>
+            <td>{contenidosModalCanales[i].cuenta}</td>
+            <td>{contenidosModalCanales[i].preferencia}</td>
+          </tr>
+        </tbody>
+      );
+    });
 
   const listaContactos = results
     .sort((item1, item2) => (item1.nombre > item2.nombre ? 1 : -1))
@@ -37,34 +70,66 @@ function Contactos() {
           <td>{item.ciudad}</td>
           <td>{item.empresa}</td>
           <td>{item.cargo}</td>
-          <td>{item.canalPreferido}</td>
+          <td>
+            <p onClick={() => handleShow(item.canales)}>
+              {item.canalPreferido}
+            </p>
+          </td>
           <td>{item.interes}</td>
+          <td>
+            <p onClick={() => manejarEditar(item)}>Editar</p>
+          </td>
+          <td>
+            <p onClick={() => manejarBorrar(item.id)}>Borrar</p>
+          </td>
         </tr>
       );
     });
 
-    const filtrador = (filtro) => {
-      setResults(lista.filter(
+  const filtrador = filtro => {
+    setResults(
+      lista.filter(
         item =>
           item.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
-          item.apellido.toLowerCase().includes(filtro.toLowerCase()) || 
-          item.ciudad.toLowerCase().includes(filtro.toLowerCase()) || 
-          item.empresa.toLowerCase().includes(filtro.toLowerCase()) || 
-          item.cargo.toLowerCase().includes(filtro.toLowerCase()) 
-      ));
+          item.apellido.toLowerCase().includes(filtro.toLowerCase()) ||
+          item.ciudad.toLowerCase().includes(filtro.toLowerCase()) ||
+          item.empresa.toLowerCase().includes(filtro.toLowerCase()) ||
+          item.cargo.toLowerCase().includes(filtro.toLowerCase())
+      )
+    );
+  };
+
+  const manejarBorrar = nombre => {
+    try {
+      servicioContacto.borrar(nombre);
+    } catch {
+      console.log("No se pudo borrar la ubicación");
+    } finally {
+      window.location.reload();
     }
+  };
+
+  const [entradaEditar, setEntradaEditar] = useState();
+
+  const manejarEditar = item => {
+    setModoEditar(true);
+    setModoAgregar(false);
+    setEntradaEditar(item);
+  };
 
   return (
     <div>
       <h3>Contactos</h3>
 
-      {!modoAgregar?<ContactosBuscador lista={lista} onChange={filtrador}/>:null}
+      {!modoAgregar || modoEditar ? (
+        <ContactosBuscador lista={lista} onChange={filtrador} />
+      ) : null}
 
-      <button onClick={cambiarModo}>
-        {!modoAgregar ? "Agregar" : "Listar"}
-      </button>
+      {!modoAgregar || modoEditar ? (
+        <button onClick={cambiarModo}>Agregar</button>
+      ) : null}
 
-      {!modoAgregar ? (
+      {!modoAgregar && !modoEditar ? (
         <div>
           <Table>
             <thead>
@@ -76,12 +141,45 @@ function Contactos() {
                 <th>Cargo</th>
                 <th>Canal Preferido</th>
                 <th>Interés</th>
+                <th>Editar</th>
+                <th>Borrar</th>
               </tr>
             </thead>
             <tbody>{listaContactos ? listaContactos : "Problemas"}</tbody>
           </Table>
         </div>
-      ) : <ContactosAgregar />}
+      ) : null}
+      {modoAgregar ? (
+        <ContactosAgregar entrada={valorInicial} editar={modoEditar} />
+      ) : null}
+      {modoEditar ? (
+        <ContactosAgregar entrada={entradaEditar} editar={modoEditar} />
+      ) : null}
+
+      {modalCanales && (
+        <Modal show={modalCanales} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Canales de contacto</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Canal</th>
+                  <th>Cuenta</th>
+                  <th>Preferencia</th>
+                </tr>
+              </thead>
+              {contenidosMod}
+            </Table>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Cerrar
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </div>
   );
 }

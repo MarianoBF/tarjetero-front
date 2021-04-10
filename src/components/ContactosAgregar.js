@@ -6,23 +6,12 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 
-function Contactos() {
+function ContactosAgregar(props) {
   const [listaEmpresas, setListaEmpresas] = useState([]);
 
-  const valorInicial = {
-    nombre: "",
-    apellido: "",
-    empresa: "",
-    cargo: "",
-    email: "",
-    region: "",
-    pais: "",
-    ciudad: "",
-    interes: "50",
-    canalPreferido: "",
-  };
 
-  const [entrada, setEntrada] = useState(valorInicial);
+
+  const [entrada, setEntrada] = useState(props.entrada);
 
   useEffect(() => {
     servicioEmpresa
@@ -108,6 +97,7 @@ function Contactos() {
 
   const guardarContacto = e => {
     e.preventDefault();
+    console.log(valoresCanales)
     const data = {
       nombre: entrada.nombre,
       apellido: entrada.apellido,
@@ -120,22 +110,28 @@ function Contactos() {
       interes: entrada.interes,
       canales: [...valoresCanales],
       canalPreferido: valoresCanales.filter(
-        item => item.preferencia === "Canal favorito"
-      ).canal,
+        item => item.preferencia === "Canal preferido"
+      )[0].canal,
     };
+    try {
     servicioContacto
       .sumar(data)
       .then(response => {
         console.log(response.data);
       })
       .catch(() => console.log("No se pudo agregar el contacto"));
+    } catch {
+      console.log("No se pudo agregar");
+    } finally {
+      window.location.reload();
+    }
   };
 
   const [cantidadCanales, setCantidadCanales] = useState([1]);
 
   const CanalesContacto = cantidadCanales.map((x, i) => {
     return (
-      <Form.Group id={x}>
+      <Form.Group key={x}>
         <Form.Label>Canales de Contacto: </Form.Label>
         <Form.Control
           as="select"
@@ -158,7 +154,7 @@ function Contactos() {
           name={`cuenta`}
           required></Form.Control>
         <Form.Label>Preferencia: </Form.Label>
-        <Form.Control
+        <Form.Control 
           as="select"
           value={valoresCanales[i].preferencia}
           onChange={e => manejarInputCanales(e, i)}
@@ -187,8 +183,13 @@ function Contactos() {
     setCantidadCanales(actual);
   };
 
+  const [modoEditar, setModoEditar] = useState(props.editar)
+  console.log(props.editar, props.entrada)
+
   return (
     <div>
+    {/* {!modoEditar ? ( */}
+      <div>
       <h3>Agregar Contacto:</h3>
       <Form inline onSubmit={guardarContacto}>
         <Col md={10}>
@@ -310,9 +311,10 @@ function Contactos() {
         </Col>
 
         <Button type="submit">Guardar</Button>
-      </Form>
+      </Form> </div>
+      {/* ): "Editando"} */}
     </div>
   );
 }
 
-export default Contactos;
+export default ContactosAgregar;
