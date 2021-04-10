@@ -4,6 +4,9 @@ import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
+import borrar from "../icons/borrar.svg";
+import editar from "../icons/editar.svg";
+
 
 function Ubicacion() {
   const [lista, setLista] = useState([]);
@@ -89,7 +92,7 @@ function Ubicacion() {
           <td>{item.email}</td>
           <td>{item.telefono}</td>
           <td>
-            <p
+            <div className="centrarContenidos"
               onClick={() =>
                 manejarEditar(
                   item.nombre,
@@ -100,11 +103,11 @@ function Ubicacion() {
                   item.telefono
                 )
               }>
-              Editar
-            </p>
+              <img className="icon" src={editar} alt="editar" />
+            </div>
           </td>
           <td>
-            <p onClick={() => manejarBorrar(item.nombre)}>Borrar</p>
+            <div className="centrarContenidos" onClick={() => manejarBorrar(item.nombre)}><img className="icon" src={borrar} alt="borrar" /></div>
           </td>
         </tr>
       );
@@ -154,16 +157,15 @@ function Ubicacion() {
 
   return (
     <div>
-      <h3>Compañías</h3>
+      <div className="tituloCompartido">
+      <h3 >Compañías</h3>
 
-      <button onClick={manejarAgregar}>
-        {!modoAgregar ? "Agregar" : "Listar"}
-      </button>
-
+      {!modoAgregar && <Button onClick={manejarAgregar} variant="primary">Agregar</Button>}
+      </div>
       {!modoAgregar && !modoEditar ? (
         <div>
           <Table>
-            <thead>
+            <thead className="fondoNaranja">
               <tr>
                 <th>Nombre</th>
                 <th>País</th>

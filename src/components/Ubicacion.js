@@ -4,6 +4,9 @@ import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
+import borrar from "../icons/borrar.svg";
+import editar from "../icons/editar.svg";
+
 
 function Ubicacion() {
   const [lista, setLista] = useState([]);
@@ -135,17 +138,18 @@ function Ubicacion() {
           <td>{item.ciudad}</td>
           <td>
             {
-              <p
+              <div className="centrarContenidos"
                 onClick={() =>
                   manejarEditar(item.region, item.pais, item.ciudad)
                 }>
-                Editar
-              </p>
+                              <img className="icon" src={editar} alt="editar" />
+
+              </div>
             }
           </td>
           <td>
             {
-              <p onClick={() => manejarBorrar(item.ciudad)}>Borrar</p>
+              <div className="centrarContenidos" onClick={() => manejarBorrar(item.ciudad)}><img className="icon" src={borrar} alt="borrar" /></div>
             }
           </td>
         </tr>
@@ -154,19 +158,23 @@ function Ubicacion() {
 
   return (
     <div>
-      <h3>Región / Ciudad</h3>
+         <div className="tituloCompartido">
+
+      <h3>Ubicaciones: Región - País - Ciudad</h3>
+      {!modoAgregar && !modoEditar && <Button variant="primary" onClick={manejarAgregar}>Agregar</Button>}
+
+    </div>
 
       {!modoAgregar && !modoEditar ? (
         <div>
-          <button onClick={manejarAgregar}>Agregar</button>
           <Table>
-            <thead>
+            <thead className="fondoNaranja">
               <tr>
                 <th>Región</th>
                 <th>País</th>
                 <th>Ciudad</th>
-                <th>Editar</th>
-                <th>Borrar</th>
+                <th className="centrarContenidos">Editar</th>
+                <th className="centrarContenidos">Borrar</th>
               </tr>
             </thead>
             <tbody>{listaUbicaciones ? listaUbicaciones : "Problemas"}</tbody>

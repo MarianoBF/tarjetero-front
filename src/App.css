@@ -28,11 +28,22 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.centrarContenidos {
+  text-align: center
+}
+
+.icon {
+  width: 25px;
+  height: 25px;
+}
+
+.tituloCompartido {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2vh 1vw;
+}
+
+.fondoNaranja {
+  background: lightsalmon
 }

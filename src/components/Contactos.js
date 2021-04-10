@@ -97,12 +97,14 @@ function Contactos() {
 
   const [checkboxes, setCheckboxes] = useState(initialCheckboxes);
   const [checkboxesActivos, setCheckboxesActivos] = useState(false);
+  const [cantidadCheckboxesActivos, setCantidadCheckboxesActivos] = useState(0);
 
   const manejarCheckbox = (e, id, i) => {
     let nuevosCheckboxes = [...checkboxes];
     nuevosCheckboxes[i].id = id;
     nuevosCheckboxes[i].checked = e.target.checked;
     setCheckboxes(nuevosCheckboxes);
+    setCantidadCheckboxesActivos(checkboxes.filter((item)=>item.checked===true).length)
     checkboxes.filter((item)=>item.checked===true).length>0?setCheckboxesActivos(true):setCheckboxesActivos(false)
   };
 
@@ -196,9 +198,10 @@ function Contactos() {
         <button onClick={cambiarModo}>Agregar</button>
       ) : null}
 
-      {checkboxesActivos ? (
+      {checkboxesActivos ? (<div>
+        <p>{cantidadCheckboxesActivos}Checkboxes seleccionados</p>
         <button onClick={borrarCheckboxes}>Borrar seleccionados</button>
-      ) : null}
+        </div>) : null}
 
       {!modoAgregar && !modoEditar ? (
         <div>
