@@ -8,6 +8,7 @@ import Configuracion from "./components/Configuracion";
 import { Switch, Route, Link } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
+import ProtectedRoute from "./components/ProtectedRoute"
 
 function App() {
   return (
@@ -40,12 +41,12 @@ function App() {
 
       <div>
         <Switch>
-          <Route exact path="/contactos" component={Contactos} />
+          <ProtectedRoute exact={true} path="/contactos" component={Contactos} />
           <Route exact path="/usuarios" component={Usuarios} />
-          <Route exact path="/empresas" component={Empresas} />
-          <Route exact path="/ubicacion" component={Ubicacion} />
-          <Route exact path="/configuracion" component={Configuracion} />
-          <Route exact path="/" component={Ubicacion} />
+          <ProtectedRoute exact={true} path="/empresas" component={Empresas} />
+          <ProtectedRoute exact={true} path="/ubicacion" component={Ubicacion} />
+          <ProtectedRoute exact={true} path="/configuracion" component={Configuracion} />
+          <Route component={Usuarios}/>
         </Switch>
       </div>
     </div>
