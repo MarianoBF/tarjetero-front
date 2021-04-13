@@ -8,11 +8,13 @@ function ProtectedRoute(props) {
         const autorizado = (sessionStorage.getItem("JWT")) ? (jwt_decode(JSON.parse(sessionStorage.getItem("JWT"))).exp >
         new Date().getTime() / 1000) : false
 
+        console.log(autorizado)
+
        
         return autorizado ? (
             <Component />
         ) : (
-            <Redirect to={{ pathname: '/login' }} />
+            <Redirect to={{ pathname: "/login" }} />
         );
     }
 

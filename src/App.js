@@ -4,14 +4,33 @@ import Ubicacion from "./components/Ubicacion";
 import Empresas from "./components/Empresas";
 import Usuarios from "./components/Usuarios";
 import Contactos from "./components/Contactos";
+import Login from "./components/Login";
 import Configuracion from "./components/Configuracion";
 import { Switch, Route, Link } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import ProtectedRoute from "./components/ProtectedRoute"
 import logo from "./media/logo.svg"
+import jwt_decode from "jwt-decode";
 
 function App() {
+
+  const chequearAdmin = () => {
+    try {
+      let token = JSON.parse(sessionStorage.getItem("JWT"));
+      token = jwt_decode(token);
+      if (token.exp > new Date().getTime() / 1000 && token.perfil === "Admin") {
+        return true;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  };
+
+  const modoAdmin = chequearAdmin();
+
   return (
     <div>
       <Navbar bg="primary" variant="light" sticky="top" expand="md" >
@@ -24,9 +43,11 @@ function App() {
             <Link to={"/contactos"} className="nav-link">
               Contactos
             </Link>
+            {modoAdmin &&
             <Link to={"/usuarios"} className="nav-link">
               Usuarios
             </Link>
+          }
             <Link to={"/empresas"} className="nav-link">
               Compañías{" "}
             </Link>
@@ -41,13 +62,15 @@ function App() {
       </Navbar>
 
       <div>
+      
         <Switch>
           <ProtectedRoute exact={true} path="/contactos" component={Contactos} />
-          <Route exact path="/usuarios" component={Usuarios} />
           <ProtectedRoute exact={true} path="/empresas" component={Empresas} />
           <ProtectedRoute exact={true} path="/ubicacion" component={Ubicacion} />
+          <ProtectedRoute exact={true} path="/usuarios" component={Usuarios} />
           <ProtectedRoute exact={true} path="/configuracion" component={Configuracion} />
-          <Route component={Usuarios}/>
+          <Route path="login" component={Login}/>
+          <Route component={Login}/>
         </Switch>
       </div>
     </div>
@@ -55,3 +78,5 @@ function App() {
 }
 
 export default App;
+
+
