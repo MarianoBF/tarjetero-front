@@ -1,7 +1,6 @@
 import http from "../http-common";
 
 class servicioUsuario {
-
   sumar(data) {
     return http.post("/usuario", data);
   }
@@ -11,15 +10,15 @@ class servicioUsuario {
   }
 
   loguear(data) {
-      return http.post("/login", data);
+    return http.post("/login", data);
   }
 
   encontrar(data) {
     return http.put("/ubicacion", data);
   }
 
-  actualizar(data) {
-    return http.put("/usuario/" + data);
+  actualizar(id, data) {
+    return http.put("/usuario/" + id, data);
   }
 
   borrar(data) {
@@ -29,7 +28,6 @@ class servicioUsuario {
   borrarTodo() {
     return http.delete("/usuarios");
   }
-
 }
 
 export default new servicioUsuario();

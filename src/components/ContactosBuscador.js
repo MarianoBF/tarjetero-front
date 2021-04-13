@@ -2,17 +2,16 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 
 function ContactosBuscador(props) {
-
-  const filtrador = (e) => {
-    props.onChange(e.target.value)
-  }
+  const filtrador = e => {
+    props.onChange(e.target.value);
+  };
 
   return (
     <div>
       <Form inline onSubmit={null}>
         <Col md={6}>
           <Form.Group>
-            <Form.Label>Ingrese busqueda: </Form.Label>
+            <Form.Label>Buscar un contacto: </Form.Label>
             <Form.Control
               type="text"
               value={props.busqueda}

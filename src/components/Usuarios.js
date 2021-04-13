@@ -7,8 +7,6 @@ import borrar from "../media/borrar.svg";
 import editar from "../media/editar.svg";
 import UsuarioAgregar from "./UsuariosAgregar.js";
 
-
-
 function Usuarios() {
   const [modoRegistro, setModoRegistro] = useState(false);
 
@@ -28,9 +26,9 @@ function Usuarios() {
 
   const [listadoUsuarios, setListadoUsuarios] = useState([]);
 
-  const manejarBorrar = (id) => {
+  const manejarBorrar = id => {
     servicioUsuario.borrar(id);
-    window.location.reload()
+    window.location.reload();
   };
 
   const [modoEditar, setModoEditar] = useState(false);
@@ -58,18 +56,15 @@ function Usuarios() {
           <td>{item.email}</td>
           <td>{item.perfil}</td>
           <td>
-            <div className="centrarContenidos"
-              onClick={() =>
-                manejarEditar(
-                  item
-                )
-              }>
+            <div className="clickeable" onClick={() => manejarEditar(item)}>
               <img className="icon" src={editar} alt="editar" />
             </div>
           </td>
 
           <td>
-            <div className="centrarContenidos" onClick={() => manejarBorrar(item._id)}><img className="icon" src={borrar} alt="borrar" /></div>
+            <div className="clickeable" onClick={() => manejarBorrar(item._id)}>
+              <img className="icon" src={borrar} alt="borrar" />
+            </div>
           </td>
         </tr>
       );
@@ -108,7 +103,7 @@ function Usuarios() {
             <h3>Usuarios existentes</h3>
             <Button onClick={manejarRegistrar}>Agregar un nuevo usuario</Button>
           </div>
-          <Table>
+          <Table striped bordered>
             <thead className="fondoNaranja">
               <tr>
                 <th>Nombre</th>
@@ -117,7 +112,6 @@ function Usuarios() {
                 <th>Perfil</th>
                 <th>Editar</th>
                 <th>Borrar</th>
-
               </tr>
             </thead>
             <tbody>{listadoDeUsuarios}</tbody>
@@ -139,7 +133,6 @@ function Usuarios() {
           cancelar={manejarCancelarEdicion}
         />
       ) : null}
-
     </div>
   );
 }

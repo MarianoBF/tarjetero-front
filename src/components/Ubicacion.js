@@ -18,7 +18,6 @@ function Ubicacion() {
       .listar()
       .then(data => {
         setLista(data.data);
-        console.log(data.data);
       })
       .catch(() => console.log("No se pudo traer la información"));
   }, []);
@@ -138,7 +137,7 @@ function Ubicacion() {
           <td>{item.ciudad}</td>
           <td>
             {
-              <div className="centrarContenidos"
+              <div className="centrarContenidos clickeable"
                 onClick={() =>
                   manejarEditar(item.region, item.pais, item.ciudad)
                 }>
@@ -149,7 +148,7 @@ function Ubicacion() {
           </td>
           <td>
             {
-              <div className="centrarContenidos" onClick={() => manejarBorrar(item.ciudad)}><img className="icon" src={borrar} alt="borrar" /></div>
+              <div className="centrarContenidos clickeable" onClick={() => manejarBorrar(item.ciudad)}><img className="icon" src={borrar} alt="borrar" /></div>
             }
           </td>
         </tr>
@@ -167,7 +166,7 @@ function Ubicacion() {
 
       {!modoAgregar && !modoEditar ? (
         <div>
-          <Table>
+          <Table striped bordered>
             <thead className="fondoNaranja">
               <tr>
                 <th>Región</th>

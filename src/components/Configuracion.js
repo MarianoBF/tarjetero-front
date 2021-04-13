@@ -1,79 +1,84 @@
-import { CIUDADES, EMPRESAS, CONTACTOS } from "./DatosInicio";
+import {CIUDADES, EMPRESAS, CONTACTOS} from "./DatosInicio";
 import servicioUbicacion from "../services/Ubicacion_servicio.js";
 import servicioEmpresa from "../services/Empresa_servicio.js";
 import servicioContacto from "../services/Contacto_servicio.js";
-
-const Cargador = () => {
-  try {
-    CIUDADES.forEach((ciudadEjemplo) => {
-      const ciudad = {
-        region: ciudadEjemplo.region,
-        pais: ciudadEjemplo.pais,
-        ciudad: ciudadEjemplo.ciudad,
-      };
-      servicioUbicacion.sumar(ciudad).then((res) => console.log(res));
-    });
-    EMPRESAS.forEach((empresaEjemplo) => {
-      const ciudad = {
-        nombre: empresaEjemplo.nombre,
-        pais: empresaEjemplo.pais,
-        ciudad: empresaEjemplo.ciudad,
-        direccion: empresaEjemplo.direccion,
-        email: empresaEjemplo.email,
-        telefono: empresaEjemplo.telefono,
-      };
-      servicioEmpresa.sumar(ciudad).then((res) => console.log(res));
-    });
-    CONTACTOS.forEach((contactoEjemplo) => {
-      const ciudad = {
-        nombre: contactoEjemplo.nombre,
-        apellido: contactoEjemplo.apellido,
-        ciudad: contactoEjemplo.ciudad,
-        empresa: contactoEjemplo.empresa,
-        cargo: contactoEjemplo.cargo,
-        canalPreferido: contactoEjemplo.canalPreferido,
-        interes: contactoEjemplo.interes,
-        canales: contactoEjemplo.canales
-      };
-      servicioContacto.sumar(ciudad).then((res) => console.log(res));
-    });
-  } catch {
-    alert("No se pudieron cargar los datos de ejemplo");
-  }
-};
-
-const Borrador = () => {
-  try {
-    servicioUbicacion.borrarTodo().then((res) => console.log(res));
-    servicioEmpresa.borrarTodo().then((res) => console.log(res));
-    servicioContacto.borrarTodo().then((res) => console.log(res));
-  } catch {
-    alert("No se pudieron borrar los datos");
-  }
-};
-
-const CerrarSesion = () => {
-  try {
-    sessionStorage.removeItem('JWT');
-    window.location.assign("/")
-  } catch {
-    console.log("No se pudo cerrar sesión")
-  }
-}
+import Button from "react-bootstrap/Button";
+import {useRef} from "react";
 
 function Config() {
+  const mensaje = useRef(null);
+
+  const Cargador = () => {
+    try {
+      CIUDADES.forEach(ciudadEjemplo => {
+        const ciudad = {
+          region: ciudadEjemplo.region,
+          pais: ciudadEjemplo.pais,
+          ciudad: ciudadEjemplo.ciudad,
+        };
+        servicioUbicacion.sumar(ciudad).then(res => console.log(res));
+      });
+      EMPRESAS.forEach(empresaEjemplo => {
+        const ciudad = {
+          nombre: empresaEjemplo.nombre,
+          pais: empresaEjemplo.pais,
+          ciudad: empresaEjemplo.ciudad,
+          direccion: empresaEjemplo.direccion,
+          email: empresaEjemplo.email,
+          telefono: empresaEjemplo.telefono,
+        };
+        servicioEmpresa.sumar(ciudad).then(res => console.log(res));
+      });
+      CONTACTOS.forEach(contactoEjemplo => {
+        const ciudad = {
+          nombre: contactoEjemplo.nombre,
+          apellido: contactoEjemplo.apellido,
+          ciudad: contactoEjemplo.ciudad,
+          empresa: contactoEjemplo.empresa,
+          cargo: contactoEjemplo.cargo,
+          canalPreferido: contactoEjemplo.canalPreferido,
+          interes: contactoEjemplo.interes,
+          canales: contactoEjemplo.canales,
+        };
+        servicioContacto.sumar(ciudad).then(res => console.log(res));
+        mensaje.current.innerText = "Se han cargado los datos";
+      });
+    } catch {
+      mensaje.current.innerText = "No se pudieron cargar los datos de ejemplo";
+    }
+  };
+
+  const Borrador = () => {
+    try {
+      servicioUbicacion.borrarTodo().then(res => console.log(res));
+      servicioEmpresa.borrarTodo().then(res => console.log(res));
+      servicioContacto.borrarTodo().then(res => console.log(res));
+      mensaje.current.innerText = "Se han borrado todos los datos";
+    } catch {
+      mensaje.current.innerText = "No se pudieron borrar los datos";
+    }
+  };
+
+  const CerrarSesion = () => {
+    try {
+      sessionStorage.removeItem("JWT");
+      window.location.assign("/");
+    } catch {
+      console.log("No se pudo cerrar sesión");
+    }
+  };
+
   return (
-    <div>
+    <div className="centrarContenidos">
       <h3>Configuración</h3>
-
-      <button onClick={Cargador}>Cargar datos de prueba</button>
-
-      <button onClick={Borrador}>Borrar todos los datos</button>
-
-      <button onClick={CerrarSesion}>Cerrar sesión</button>
-
-      <p>Mensaje</p>
-
+      <Button variant="warning" onClick={Cargador}>
+        Cargar datos de prueba
+      </Button>{" "}
+      <Button variant="danger" onClick={Borrador}>
+        Borrar todos los datos
+      </Button>{" "}
+      <Button onClick={CerrarSesion}>Cerrar sesión</Button>
+      <p ref={mensaje} className="mensajeSeparado"></p>
     </div>
   );
 }

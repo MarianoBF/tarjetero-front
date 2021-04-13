@@ -5,6 +5,8 @@ import ContactosBuscador from "./ContactosBuscador";
 import ContactosAgregar from "./ContactosAgregar";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import borrar from "../media/borrar.svg";
+import editar from "../media/editar.svg";
 
 function Contactos() {
   const [lista, setLista] = useState([]);
@@ -49,7 +51,7 @@ function Contactos() {
 
   const contenidosMod = contenidosModalCanales.map((item, i) => {
     return (
-      <tbody>
+      <tbody key={i}>
         <tr>
           <td>{contenidosModalCanales[i].canal}</td>
           <td>{contenidosModalCanales[i].cuenta}</td>
@@ -104,21 +106,26 @@ function Contactos() {
     nuevosCheckboxes[i].id = id;
     nuevosCheckboxes[i].checked = e.target.checked;
     setCheckboxes(nuevosCheckboxes);
-    setCantidadCheckboxesActivos(checkboxes.filter((item)=>item.checked===true).length)
-    checkboxes.filter((item)=>item.checked===true).length>0?setCheckboxesActivos(true):setCheckboxesActivos(false)
+    setCantidadCheckboxesActivos(
+      checkboxes.filter(item => item.checked === true).length
+    );
+    checkboxes.filter(item => item.checked === true).length > 0
+      ? setCheckboxesActivos(true)
+      : setCheckboxesActivos(false);
   };
 
-  const borrarCheckboxes = () =>{
-    const borrables = checkboxes.filter((item)=>item.checked===true);
-    console.log(borrables)
+  const borrarCheckboxes = () => {
+    const borrables = checkboxes.filter(item => item.checked === true);
     try {
-      borrables.forEach((item)=>{servicioContacto.borrar(item.id)});
+      borrables.forEach(item => {
+        servicioContacto.borrar(item.id);
+      });
     } catch {
       console.log("No se pudo borrar la ubicación");
     } finally {
       window.location.reload();
     }
-  }
+  };
 
   const listaContactos = results
     .sort((item1, item2) => (item1.nombre > item2.nombre ? 1 : -1))
@@ -130,7 +137,7 @@ function Contactos() {
               type="checkbox"
               label=""
               value={checkboxes[i].checked}
-              onChange={(e) => manejarCheckbox(e, item._id, i)}
+              onChange={e => manejarCheckbox(e, item._id, i)}
             />
           </td>
           <td>{item.nombre}</td>
@@ -139,21 +146,26 @@ function Contactos() {
           <td>{item.empresa}</td>
           <td>{item.cargo}</td>
           <td>
-            <p onClick={() => manejarMostrar(item.canales)}>
+            <p
+              className="clickeable margenCero"
+              onClick={() => manejarMostrar(item.canales)}>
               {item.canalPreferido}
             </p>
           </td>
           <td>{item.interes}</td>
           <td>
-            <p onClick={() => manejarEditar(item)}>Editar</p>
+            <div className="clickeable" onClick={() => manejarEditar(item)}>
+              <img className="icon" src={editar} alt="editar" />
+            </div>
           </td>
           <td>
-            <p
+            <div
+              className="clickeable"
               onClick={() =>
                 manejarBorrar(item._id, item.nombre, item.apellido)
               }>
-              Borrar
-            </p>
+              <img className="icon" src={borrar} alt="borrar" />
+            </div>
           </td>
         </tr>
       );
@@ -188,35 +200,37 @@ function Contactos() {
 
   return (
     <div>
-      <h3>Contactos</h3>
+      <div className="tituloCompartido">
+        <h3>Contactos</h3>
 
-      {!modoAgregar || modoEditar ? (
-        <ContactosBuscador lista={lista} onChange={filtrador} />
-      ) : null}
+        {!modoAgregar || modoEditar ? (
+          <ContactosBuscador lista={lista} onChange={filtrador} />
+        ) : null}
 
-      {!modoAgregar || modoEditar ? (
-        <button onClick={cambiarModo}>Agregar</button>
-      ) : null}
+        {checkboxesActivos && (
+          <Button variant="warning" onClick={borrarCheckboxes}>
+            {cantidadCheckboxesActivos === 1
+              ? "Borrar el contacto seleccionado"
+              : `Borrar los ${cantidadCheckboxesActivos} contactos seleccionados`}
+          </Button>
+        )}
 
-      {checkboxesActivos ? (<div>
-        <p>{cantidadCheckboxesActivos}Checkboxes seleccionados</p>
-        <button onClick={borrarCheckboxes}>Borrar seleccionados</button>
-        </div>) : null}
-
+        {!modoAgregar || modoEditar ? (
+          <Button onClick={cambiarModo}>Agregar</Button>
+        ) : null}
+      </div>
       {!modoAgregar && !modoEditar ? (
         <div>
-          <Table>
-            <thead>
+          <Table striped bordered className="centrarContenidos">
+            <thead className="fondoNaranja">
               <tr>
-                <th>
-
-                </th>
+                <th></th>
                 <th>Nombre</th>
                 <th>Apellido</th>
                 <th>Ciudad</th>
                 <th>Empresa</th>
                 <th>Cargo</th>
-                <th>Canal Preferido</th>
+                <th>Canal Preferido*</th>
                 <th>Interés</th>
                 <th>Editar</th>
                 <th>Borrar</th>
@@ -285,6 +299,7 @@ function Contactos() {
           </Modal.Footer>
         </Modal>
       )}
+      <p>*Click para ver todos los canales disponibles</p>
     </div>
   );
 }

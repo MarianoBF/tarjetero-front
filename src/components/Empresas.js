@@ -7,7 +7,6 @@ import Col from "react-bootstrap/Col";
 import borrar from "../media/borrar.svg";
 import editar from "../media/editar.svg";
 
-
 function Ubicacion() {
   const [lista, setLista] = useState([]);
   const [modoAgregar, setModoAgregar] = useState(false);
@@ -18,7 +17,6 @@ function Ubicacion() {
       .listar()
       .then(data => {
         setLista(data.data);
-        console.log(data.data);
       })
       .catch(() => console.log("No se pudo traer la información"));
   }, []);
@@ -78,7 +76,7 @@ function Ubicacion() {
     setEntrada();
     setModoEditar(false);
     setModoAgregar(false);
-  }
+  };
 
   const listaEmpresas = lista
     .sort((item1, item2) => (item1.pais > item2.pais ? 1 : -1))
@@ -92,7 +90,8 @@ function Ubicacion() {
           <td>{item.email}</td>
           <td>{item.telefono}</td>
           <td>
-            <div className="centrarContenidos"
+            <div
+              className="centrarContenidos clickeable"
               onClick={() =>
                 manejarEditar(
                   item.nombre,
@@ -107,7 +106,11 @@ function Ubicacion() {
             </div>
           </td>
           <td>
-            <div className="centrarContenidos" onClick={() => manejarBorrar(item.nombre)}><img className="icon" src={borrar} alt="borrar" /></div>
+            <div
+              className="centrarContenidos clickeable"
+              onClick={() => manejarBorrar(item.nombre)}>
+              <img className="icon" src={borrar} alt="borrar" />
+            </div>
           </td>
         </tr>
       );
@@ -158,13 +161,17 @@ function Ubicacion() {
   return (
     <div>
       <div className="tituloCompartido">
-      <h3 >Compañías</h3>
+        <h3>Compañías</h3>
 
-      {!modoAgregar && <Button onClick={manejarAgregar} variant="primary">Agregar</Button>}
+        {!modoAgregar && (
+          <Button onClick={manejarAgregar} variant="primary">
+            Agregar
+          </Button>
+        )}
       </div>
       {!modoAgregar && !modoEditar ? (
         <div>
-          <Table>
+          <Table striped bordered>
             <thead className="fondoNaranja">
               <tr>
                 <th>Nombre</th>
@@ -232,7 +239,9 @@ function Ubicacion() {
               </Form.Group>
             </Col>
             <Button type="submit">Guardar</Button>{" "}
-            <Button onClick={manejarCancelar} variant="danger">Cancelar</Button>
+            <Button onClick={manejarCancelar} variant="danger">
+              Cancelar
+            </Button>
           </Form>
         </div>
       ) : null}
@@ -286,9 +295,10 @@ function Ubicacion() {
                   required></Form.Control>
               </Form.Group>
             </Col>
-            <Button type="submit">Guardar</Button>
-            {" "}
-            <Button onClick={manejarCancelar} variant="danger">Cancelar</Button>
+            <Button type="submit">Guardar</Button>{" "}
+            <Button onClick={manejarCancelar} variant="danger">
+              Cancelar
+            </Button>
           </Form>
         </div>
       ) : null}

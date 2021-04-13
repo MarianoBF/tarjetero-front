@@ -12,10 +12,12 @@ function UsuariosAgregar(props) {
     setEntrada({...entrada, [name]: value});
   };
 
-  const crearUsuario = e => {
+  const guardarUsuario = e => {
     e.preventDefault();
-    if (entrada.password !== entrada.confirmarPassword) {
-      return alert("Los password no coinciden!");
+    if (!props.editar) {
+      if (entrada.password !== entrada.confirmarPassword) {
+        return alert("Los password no coinciden!");
+      }
     }
     const data = {
       nombre: entrada.nombre,
@@ -24,16 +26,25 @@ function UsuariosAgregar(props) {
       password: entrada.password,
       perfil: entrada.perfil,
     };
-    servicioUsuario
-      .sumar(data)
-      .then(response => {
-        console.log(response.data);
-        !props.editar
-          ? alert("Usuario creado con éxito!")
-          : alert("Usuario actualizado con éxito!");
-        window.location.reload();
-      })
-      .catch(() => console.log("No se pudo agregar el usuario"));
+    if (!props.editar) {
+      servicioUsuario
+        .sumar(data)
+        .then(response => {
+          console.log(response.data);
+          alert("Usuario creado con éxito!");
+          window.location.reload();
+        })
+        .catch(() => console.log("No se pudo agregar el usuario"));
+    } else {
+      servicioUsuario
+        .actualizar(entrada.id, data)
+        .then(response => {
+          console.log(response.data);
+          alert("Usuario actualizado con éxito!");
+          window.location.reload();
+        })
+        .catch(() => console.log("No se pudo agregar el usuario"));
+    }
   };
 
   return (
@@ -44,7 +55,7 @@ function UsuariosAgregar(props) {
         ) : (
           <h3>Editar Usuario</h3>
         )}
-        <Form onSubmit={crearUsuario}>
+        <Form onSubmit={guardarUsuario}>
           <Col className="bloqueCentrado" md={6}>
             <Form.Group>
               <Form.Label>Nombre: </Form.Label>

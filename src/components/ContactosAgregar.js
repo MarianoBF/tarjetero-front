@@ -113,6 +113,7 @@ function ContactosAgregar(props) {
         item => item.preferencia === "Canal preferido"
       )[0].canal,
     };
+    if (!props.editar){
     try {
     servicioContacto
       .sumar(data)
@@ -125,6 +126,20 @@ function ContactosAgregar(props) {
     } finally {
       window.location.reload();
     }
+  } else {
+    try {
+      servicioContacto
+        .actualizar(entrada.id, data)
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(() => console.log("No se pudo actualizar el contacto"));
+      } catch {
+        console.log("No se pudo actualizar");
+      } finally {
+        window.location.reload();
+      }
+  }
   };
 
   const [cantidadCanales, setCantidadCanales] = useState([1]);

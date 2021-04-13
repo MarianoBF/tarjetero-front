@@ -9,8 +9,8 @@ class servicioContacto {
   listar() {
     return http.get("/contactos");
   }
-  actualizar(data) {
-    return http.put("/contacto", data);
+  actualizar(id, data) {
+    return http.put("/contacto/"+id, data);
   }
 
   borrar(empresa) {
