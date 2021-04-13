@@ -52,6 +52,15 @@ const Borrador = () => {
   }
 };
 
+const CerrarSesion = () => {
+  try {
+    sessionStorage.removeItem('JWT');
+    window.location.assign("/")
+  } catch {
+    console.log("No se pudo cerrar sesión")
+  }
+}
+
 function Config() {
   return (
     <div>
@@ -60,6 +69,11 @@ function Config() {
       <button onClick={Cargador}>Cargar datos de prueba</button>
 
       <button onClick={Borrador}>Borrar todos los datos</button>
+
+      <button onClick={CerrarSesion}>Cerrar sesión</button>
+
+      <p>Mensaje</p>
+
     </div>
   );
 }

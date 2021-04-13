@@ -4,8 +4,8 @@ import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
-import borrar from "../icons/borrar.svg";
-import editar from "../icons/editar.svg";
+import borrar from "../media/borrar.svg";
+import editar from "../media/editar.svg";
 
 
 function Ubicacion() {

@@ -47,3 +47,17 @@
 .fondoNaranja {
   background: lightsalmon
 }
+
+.bloqueCentrado {
+  display: block;
+  margin: 1vh auto;
+}
+
+.logo {
+  width: 150px;
+}
+
+h3 {
+  margin: 2vh 0;
+  color: #007bff;
+}

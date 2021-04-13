@@ -9,17 +9,18 @@ import { Switch, Route, Link } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import ProtectedRoute from "./components/ProtectedRoute"
+import logo from "./media/logo.svg"
 
 function App() {
   return (
     <div>
-      <Navbar bg="dark" variant="dark" sticky="top" expand="md">
+      <Navbar bg="primary" variant="light" sticky="top" expand="md" >
         <Navbar.Brand>
-          <Link to={"/"}>/LOGO!/</Link>
+          <Link to={"/"}><img className="logo" src={logo} alt="logo" /></Link>
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse>
-          <Nav className="mr-auto">
+          <Nav className="ml-auto">
             <Link to={"/contactos"} className="nav-link">
               Contactos
             </Link>

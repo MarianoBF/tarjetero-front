@@ -135,11 +135,7 @@ function Usuarios() {
   const [modoAutorizado, setModoAutorizado] = useState(tratarAutorizar);
 
   return (
-    <div>
-      <button onClick={cambiarModo}>
-        {!modoAutorizado ? "Loguearse" : "Registrarse"}
-      </button>
-
+    <div className="centrarContenidos">
       {modoAutorizado && (
         <div>
           <h3>Los usuarios existentes son</h3>
@@ -160,7 +156,7 @@ function Usuarios() {
         <div>
           <h3>Formulario de registro</h3>
           <Form onSubmit={crearUsuario}>
-            <Col md={6}>
+            <Col className="bloqueCentrado"  md={6}>
               <Form.Group>
                 <Form.Label>Nombre: </Form.Label>
                 <Form.Control
@@ -210,8 +206,8 @@ function Usuarios() {
                   <option>Admin</option>
                 </Form.Control>
               </Form.Group>
+              <Button className="bloqueCentrado" type="submit" size="lg">Registro</Button>
             </Col>
-            <Button type="submit">Registro</Button>
           </Form>
         </div>
       ) : null}
@@ -219,7 +215,7 @@ function Usuarios() {
         <div>
           <h3>Loguearse:</h3>
           <Form onSubmit={loguearUsuario}>
-            <Col md={6}>
+            <Col md={6} className="bloqueCentrado" >
               <Form.Group>
                 <Form.Label>Email: </Form.Label>
                 <Form.Control
@@ -236,11 +232,17 @@ function Usuarios() {
                   name="password"
                   required></Form.Control>
               </Form.Group>
+              <Button className="bloqueCentrado" type="submit" size="lg">Loguear</Button>
             </Col>
-            <Button type="submit">Loguear</Button>
           </Form>
         </div>
       ) : null}
+      <Col className="bloqueCentrado"  md={6}>
+      {!modoAutorizado && <Button variant="info" block onClick={cambiarModo}>
+        {!modoLoguear ? "Ya tengo cuenta,  me quiero loguear" : "No tengo cuenta, me quiero Registrar"}
+      </Button>}
+      </Col>
+
     </div>
   );
 }
