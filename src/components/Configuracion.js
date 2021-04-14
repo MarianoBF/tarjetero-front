@@ -33,7 +33,11 @@ function Config() {
         const ciudad = {
           nombre: contactoEjemplo.nombre,
           apellido: contactoEjemplo.apellido,
+          direccion: contactoEjemplo.direccion,
           ciudad: contactoEjemplo.ciudad,
+          pais: contactoEjemplo.pais,
+          region: contactoEjemplo.region,
+          email: contactoEjemplo.email,
           empresa: contactoEjemplo.empresa,
           cargo: contactoEjemplo.cargo,
           canalPreferido: contactoEjemplo.canalPreferido,

@@ -22,6 +22,7 @@ function Contactos() {
     servicioContacto
       .listar()
       .then(data => {
+        console.log(data.data)
         setLista(data.data);
         setResults(data.data);
       })
@@ -147,7 +148,7 @@ function Contactos() {
           <td>{item.cargo}</td>
           <td>
             <p
-              className="clickeable margenCero"
+              className="clickeable textoSubrayado margenCero"
               onClick={() => manejarMostrar(item.canales)}>
               {item.canalPreferido}
             </p>
@@ -190,6 +191,7 @@ function Contactos() {
     setModoEditar(true);
     setModoAgregar(false);
     setEntradaEditar(item);
+    console.log("item", item)
   };
 
   const manejarCancelarEdicion = () => {
@@ -198,12 +200,14 @@ function Contactos() {
     setEntradaEditar(valorInicial);
   };
 
+  const initialValueCanales = [{canal: "", cuenta: "", preferencia: ""}];
+
   return (
     <div>
       <div className="tituloCompartido">
-        <h3>Contactos</h3>
+        {!modoAgregar && !modoEditar && <h3>Contactos</h3>}
 
-        {!modoAgregar || modoEditar ? (
+        {!modoAgregar && !modoEditar ? (
           <ContactosBuscador lista={lista} onChange={filtrador} />
         ) : null}
 
@@ -215,10 +219,13 @@ function Contactos() {
           </Button>
         )}
 
-        {!modoAgregar || modoEditar ? (
+        {!modoAgregar && !modoEditar ? (
           <Button onClick={cambiarModo}>Agregar</Button>
         ) : null}
       </div>
+
+      {!modoAgregar && !modoEditar && <p className="alinearDerecha">*Click para ver todos los canales disponibles</p>}
+
       {!modoAgregar && !modoEditar ? (
         <div>
           <Table striped bordered className="centrarContenidos">
@@ -245,6 +252,8 @@ function Contactos() {
           entrada={valorInicial}
           editar={modoEditar}
           cancelar={manejarCancelarEdicion}
+          cantCanales={[1]}
+          canales={initialValueCanales}
         />
       ) : null}
       {modoEditar ? (
@@ -252,6 +261,8 @@ function Contactos() {
           entrada={entradaEditar}
           editar={modoEditar}
           cancelar={manejarCancelarEdicion}
+          cantCanales={Array(entradaEditar.canales.length).fill(1)}
+          canales={[...entradaEditar.canales]}
         />
       ) : null}
 
@@ -299,7 +310,6 @@ function Contactos() {
           </Modal.Footer>
         </Modal>
       )}
-      <p>*Click para ver todos los canales disponibles</p>
     </div>
   );
 }

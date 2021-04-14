@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 
 function ContactosAgregar(props) {
+  
   const [listaEmpresas, setListaEmpresas] = useState([]);
 
 
@@ -23,7 +24,7 @@ function ContactosAgregar(props) {
   }, []);
 
   const elegirListaEmpresas = listaEmpresas.map(item => {
-    return <option>{item.nombre}</option>;
+    return <option key={item.nombre}>{item.nombre}</option>;
   });
 
   const [listaUbicaciones, setListaUbicaciones] = useState([]);
@@ -40,7 +41,7 @@ function ContactosAgregar(props) {
   const regiones = new Set(listaUbicaciones.map(item => item.region));
 
   const elegirListaRegiones = Array.from(regiones).map(item => {
-    return <option>{item}</option>;
+    return <option key={item}>{item}</option>;
   });
 
   const paisRef = useRef(null);
@@ -59,7 +60,7 @@ function ContactosAgregar(props) {
   );
 
   const elegirListaPaises = Array.from(paises).map(item => {
-    return <option>{item}</option>;
+    return <option key={item}>{item}</option>;
   });
 
   const manejarElegirPais = e => {
@@ -76,7 +77,7 @@ function ContactosAgregar(props) {
     .map(item => item.ciudad);
 
   const elegirListaCiudades = ciudades.map(item => {
-    return <option>{item}</option>;
+    return <option key={item}>{item}</option>;
   });
 
   const manejarInput = event => {
@@ -84,9 +85,8 @@ function ContactosAgregar(props) {
     setEntrada({...entrada, [name]: value});
   };
 
-  const initialValueCanales = [{canal: "", cuenta: "", preferencia: ""}];
 
-  const [valoresCanales, setValoresCanales] = useState(initialValueCanales);
+  const [valoresCanales, setValoresCanales] = useState(props.canales);
 
   const manejarInputCanales = (event, i) => {
     const {name, value} = event.target;
@@ -142,11 +142,11 @@ function ContactosAgregar(props) {
   }
   };
 
-  const [cantidadCanales, setCantidadCanales] = useState([1]);
+  const [cantidadCanales, setCantidadCanales] = useState(props.cantCanales);
 
   const CanalesContacto = cantidadCanales.map((x, i) => {
     return (
-      <Form.Group key={x}>
+      <Form.Group key={i}>
         <Form.Label>Canales de Contacto: </Form.Label>
         <Form.Control
           as="select"
@@ -201,9 +201,10 @@ function ContactosAgregar(props) {
   return (
     <div>
       <div>
-      <h3>Agregar Contacto:</h3>
+      <h1>Agregar Contacto:</h1>
       <Form inline onSubmit={guardarContacto}>
         <Col md={10}>
+        <h2>Nombre y Compañía</h2>
           <Form.Group>
             <Form.Label>Nombre: </Form.Label>
             <Form.Control
@@ -226,6 +227,12 @@ function ContactosAgregar(props) {
               onChange={manejarInput}
               name="cargo"
               required></Form.Control>
+                        </Form.Group>
+
+</Col>
+                      <Col md={10}>
+                      <Form.Group>
+
             <Form.Label>Email: </Form.Label>
             <Form.Control
               type="text"
@@ -245,7 +252,9 @@ function ContactosAgregar(props) {
             </Form.Control>
           </Form.Group>
         </Col>
+
         <Col md={10}>
+        <h2>Ubicación e interés</h2>
           <Form.Group>
             <Form.Label>Región: </Form.Label>
             <Form.Control
@@ -282,6 +291,11 @@ function ContactosAgregar(props) {
 
               {elegirListaCiudades}
             </Form.Control>
+            </Form.Group>
+
+</Col>
+                      <Col md={10}>
+                      <Form.Group>
             <Form.Label>Dirección: </Form.Label>
             <Form.Control
               type="text"
@@ -290,7 +304,7 @@ function ContactosAgregar(props) {
               name="direccion"
               required></Form.Control>
             <Form.Label>Interés: </Form.Label>
-            <Col md={4}>
+            <Col md={2}>
               <Form.Control
                 type="range"
                 min="0"
@@ -302,10 +316,12 @@ function ContactosAgregar(props) {
                 required></Form.Control>
             </Col>
 
-            <Col md={1}>
+            <Col>
               <Form.Control
-                size="sm"
-                type="text"
+                type="number"
+                min="0"
+                max="100"
+                step="25"
                 value={entrada.interes}
                 onChange={manejarInput}
                 name="interes"
@@ -315,18 +331,32 @@ function ContactosAgregar(props) {
         </Col>
 
         <Col md={10}>
+        <Form.Group>
+        <h2>Canales de contacto</h2>{"\t"}        
+          <Button size="sm" className="botonSeparadoHor" onClick={agregarCanal}>Agregar canal</Button>{"   "}
+          <Button size="sm" variant="warning" onClick={removerCanal}>Quitar canal</Button>
           {CanalesContacto}
+</Form.Group>
 
-          <Button onClick={agregarCanal}>Agregar canal</Button>
-          <Button onClick={removerCanal}>Quitar canal</Button>
+
         </Col>
 
-        <Button type="submit">Guardar</Button>
-      </Form> </div>
+        <Col md={10}>
+        <div className="centradoSeparado">
 
-      <Button variant="secondary" onClick={props.cancelar}>
+        <Button variant="secondary" onClick={props.cancelar}>
               Cancelar y regresar al listado
             </Button>
+            {" "}
+
+            <Button type="submit" size="lg">Guardar</Button>
+</div>
+        </Col>
+
+
+      </Form> </div>
+
+
 
     </div>
   );
