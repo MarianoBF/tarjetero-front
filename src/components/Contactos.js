@@ -22,7 +22,6 @@ function Contactos() {
     servicioContacto
       .listar()
       .then(data => {
-        console.log(data.data)
         setLista(data.data);
         setResults(data.data);
       })
@@ -191,7 +190,6 @@ function Contactos() {
     setModoEditar(true);
     setModoAgregar(false);
     setEntradaEditar(item);
-    console.log("item", item)
   };
 
   const manejarCancelarEdicion = () => {
@@ -205,7 +203,7 @@ function Contactos() {
   return (
     <div>
       <div className="tituloCompartido">
-        {!modoAgregar && !modoEditar && <h3>Contactos</h3>}
+        {!modoAgregar && !modoEditar && <h1>Contactos</h1>}
 
         {!modoAgregar && !modoEditar ? (
           <ContactosBuscador lista={lista} onChange={filtrador} />

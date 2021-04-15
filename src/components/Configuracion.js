@@ -74,7 +74,7 @@ function Config() {
 
   return (
     <div className="centrarContenidos">
-      <h3>Configuración</h3>
+      <h1>Configuración</h1>
       <Button variant="warning" onClick={Cargador}>
         Cargar datos de prueba
       </Button>{" "}

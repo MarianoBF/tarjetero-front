@@ -97,7 +97,6 @@ function ContactosAgregar(props) {
 
   const guardarContacto = e => {
     e.preventDefault();
-    console.log(valoresCanales)
     const data = {
       nombre: entrada.nombre,
       apellido: entrada.apellido,

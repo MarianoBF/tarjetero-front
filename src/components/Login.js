@@ -44,7 +44,7 @@ function Login() {
     <div className="centrarContenidos">
       {
         <div>
-          <h3>Loguearse:</h3>
+          <h1>Loguearse:</h1>
           <Form onSubmit={loguearUsuario}>
             <Col md={6} className="bloqueCentrado">
               <Form.Group>

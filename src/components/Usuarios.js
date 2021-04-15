@@ -100,7 +100,7 @@ function Usuarios() {
       {modoAdmin && !modoRegistro && !modoEditar && (
         <div>
           <div className="tituloCompartido">
-            <h3>Usuarios existentes</h3>
+            <h1>Usuarios existentes</h1>
             <Button onClick={manejarRegistrar}>Agregar un nuevo usuario</Button>
           </div>
           <Table striped bordered>
