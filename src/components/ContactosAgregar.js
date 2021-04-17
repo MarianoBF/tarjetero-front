@@ -184,11 +184,13 @@ function ContactosAgregar(props) {
   });
 
   const agregarCanal = () => {
+    if (cantidadCanales.length <5) {
     setCantidadCanales([...cantidadCanales, 1]);
     setValoresCanales([
       ...valoresCanales,
       {canal: "", cuenta: "", preferencia: ""},
     ]);
+  }
   };
 
   const removerCanal = () => {
