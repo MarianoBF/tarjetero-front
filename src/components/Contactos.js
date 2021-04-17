@@ -7,6 +7,8 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import borrar from "../media/borrar.svg";
 import editar from "../media/editar.svg";
+import ContactosDescargar from "./ContactosDescargar";
+import XLSX from "xlsx";
 
 function Contactos() {
   const [lista, setLista] = useState([]);
@@ -200,6 +202,65 @@ function Contactos() {
 
   const initialValueCanales = [{canal: "", cuenta: "", preferencia: ""}];
 
+  const [descargar, setDescargar] = useState(false);
+
+  const [idsTildados, setIdsTildados] = useState([]);
+
+  const descargarContactos = () => {
+    setDescargar(true);
+    setTimeout(restaurarDescargar, 1000);
+    setIdsTildados(checkboxes.map(item => item.id));
+  };
+
+  const restaurarDescargar = () => {
+    setDescargar(false);
+  };
+
+  const [archivo, setArchivo] = useState();
+  const [subir, setSubir] = useState();
+
+  const manejarSubida = event => {
+    setArchivo(event.target.files[0]);
+    setSubir(true);
+  };
+
+  const importarContactos = () => {
+    const reader = new FileReader();
+    reader.onload = evt => {
+      const bstr = evt.target.result;
+      const wb = XLSX.read(bstr, {type: "binary"});
+      const wsname = wb.SheetNames[0];
+      const ws = wb.Sheets[wsname];
+      const contactosAux = XLSX.utils.sheet_to_json(ws, {header: 1});
+      console.log(contactosAux);
+      let contactos = [];
+      contactosAux.forEach((contacto, i) => {
+        if (i === 0) {
+          console.log("header")
+        } else {
+          const aSumar = {
+          apellido: contacto[0],
+          nombre: contacto[1],
+          cargo: contacto[2]
+        }
+        contactos.push(aSumar)
+      }})
+        contactos.forEach(contacto => {
+        servicioContacto
+          .sumar(contacto)
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(() => console.log("No se pudo agregar el contacto"))
+    });
+    };
+    reader.readAsBinaryString(archivo);
+    setSubir(false);
+    window.location.reload()
+  };
+
+  const descargarModelo = () => {};
+
   return (
     <div>
       <div className="tituloCompartido">
@@ -222,7 +283,49 @@ function Contactos() {
         ) : null}
       </div>
 
-      {!modoAgregar && !modoEditar && <p className="alinearDerecha">*Click para ver todos los canales disponibles</p>}
+      <div className="tituloCompartido">
+        <label name="file">Subir contactos de un .xlsx</label>
+        <input type="file" name="file" onChange={manejarSubida} />
+
+        {subir && (
+          <Button variant="info" onClick={importarContactos}>
+            Importar
+          </Button>
+        )}
+
+        <Button variant="info" onClick={descargarModelo}>
+          Descargar archivo .xlsx modelo para importar contactos
+        </Button>
+
+        {!checkboxesActivos && (
+          <Button variant="info" onClick={descargarContactos}>
+            Descargar todos los contactos en un .xlsx
+          </Button>
+        )}
+        {!checkboxesActivos && descargar && (
+          <ContactosDescargar datos={results} />
+        )}
+
+        {checkboxesActivos && (
+          <Button variant="info" onClick={descargarContactos}>
+            {cantidadCheckboxesActivos === 1
+              ? "Descargar el contacto seleccionado"
+              : `Descargar los ${cantidadCheckboxesActivos} contactos seleccionados`}
+          </Button>
+        )}
+
+        {checkboxesActivos && descargar && (
+          <ContactosDescargar
+            datos={results.filter(item => idsTildados.includes(item._id))}
+          />
+        )}
+      </div>
+
+      {!modoAgregar && !modoEditar && (
+        <p className="alinearDerecha">
+          *Click para ver todos los canales disponibles
+        </p>
+      )}
 
       {!modoAgregar && !modoEditar ? (
         <div>
