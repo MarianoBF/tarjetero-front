@@ -238,18 +238,26 @@ function Contactos() {
 
   const importarContactos = () => {
     const reader = new FileReader();
+    reader.readAsBinaryString(archivo);
     reader.onload = evt => {
       const bstr = evt.target.result;
       const wb = XLSX.read(bstr, {type: "binary"});
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       const contactosAux = XLSX.utils.sheet_to_json(ws, {header: 1});
-      console.log(contactosAux);
+      console.log("aux", contactosAux);
       let contactos = [];
       contactosAux.forEach((contacto, i) => {
         if (i === 0) {
           console.log("header");
         } else {
+          const canales = [];
+          canales[0] = {canal: contacto[10], cuenta: contacto[11], preferencia: contacto[12]}
+          canales[1] = {canal: contacto[13], cuenta: contacto[14], preferencia: contacto[15]}
+          canales[2] = {canal: contacto[16], cuenta: contacto[17], preferencia: contacto[18]}
+          canales[3] = {canal: contacto[19], cuenta: contacto[20], preferencia: contacto[21]}
+          canales[4] = {canal: contacto[22], cuenta: contacto[23], preferencia: contacto[24]}
+
           const aSumar = {
             apellido: contacto[0],
             nombre: contacto[1],
@@ -261,11 +269,12 @@ function Contactos() {
             ciudad: contacto[7],
             interes: contacto[8],
             canalPreferido: contacto[9],
-            canales: [...contacto[10]],
+            canales: [...canales]
           };
           contactos.push(aSumar);
         }
       });
+      console.log(contactos)
       contactos.forEach(contacto => {
         servicioContacto
           .sumar(contacto)
@@ -275,7 +284,6 @@ function Contactos() {
           .catch(() => console.log("No se pudo agregar el contacto"));
       });
     };
-    reader.readAsBinaryString(archivo);
     setSubir(false);
     // window.location.reload();
   };
@@ -286,6 +294,7 @@ function Contactos() {
 
   const resultBaj = results.map((item, i) => {
     let objeto = {};
+    try {
     item.canales.forEach((cadaCanal, num) => {
       const canal = "canal" + num
       const cuenta = "cuenta" + num
@@ -293,8 +302,11 @@ function Contactos() {
       objeto[canal] = cadaCanal.canal;
       objeto[cuenta] = cadaCanal.cuenta;
       objeto[preferencia] = cadaCanal.preferencia;
-    });
+    });}
+    catch { }
+    finally{
     return objeto;
+  }
   });
 
   const unirResults = () => {
@@ -308,9 +320,6 @@ function Contactos() {
 
   let juntados = unirResults()
   
-console.log(juntados)
-
-
   return (
     <div>
       <div className="tituloCompartido">
