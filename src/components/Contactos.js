@@ -257,42 +257,43 @@ function Contactos() {
         } else {
           const canales = [];
           canales[0] = {
-            canal: contacto[10],
-            cuenta: contacto[11],
-            preferencia: contacto[12],
+            canal: contacto[11],
+            cuenta: contacto[12],
+            preferencia: contacto[13],
           };
           canales[1] = {
-            canal: contacto[13],
-            cuenta: contacto[14],
-            preferencia: contacto[15],
+            canal: contacto[14],
+            cuenta: contacto[15],
+            preferencia: contacto[16],
           };
           canales[2] = {
-            canal: contacto[16],
-            cuenta: contacto[17],
-            preferencia: contacto[18],
+            canal: contacto[17],
+            cuenta: contacto[18],
+            preferencia: contacto[19],
           };
           canales[3] = {
-            canal: contacto[19],
-            cuenta: contacto[20],
-            preferencia: contacto[21],
+            canal: contacto[20],
+            cuenta: contacto[21],
+            preferencia: contacto[22],
           };
           canales[4] = {
-            canal: contacto[22],
-            cuenta: contacto[23],
-            preferencia: contacto[24],
+            canal: contacto[23],
+            cuenta: contacto[24],
+            preferencia: contacto[25],
           };
 
           const aSumar = {
-            apellido: contacto[0],
-            nombre: contacto[1],
+            nombre: contacto[0],
+            apellido: contacto[1],
             empresa: contacto[2],
             cargo: contacto[3],
             email: contacto[4],
             region: contacto[5],
             pais: contacto[6],
             ciudad: contacto[7],
-            interes: contacto[8],
-            canalPreferido: contacto[9],
+            direccion: contacto[8],
+            interes: contacto[9],
+            canalPreferido: contacto[10],
             canales: [...canales],
           };
           contactos.push(aSumar);
