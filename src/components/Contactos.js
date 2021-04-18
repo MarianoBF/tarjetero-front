@@ -3,13 +3,13 @@ import {useState, useEffect} from "react";
 import Table from "react-bootstrap/Table";
 import ContactosBuscador from "./ContactosBuscador";
 import ContactosAgregar from "./ContactosAgregar";
+import ContactosDescargar from "./ContactosDescargar";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import borrar from "../media/borrar.svg";
 import editar from "../media/editar.svg";
 import XLSX from "xlsx";
-import ReactExport from "react-export-excel";
 
 function Contactos() {
   const [lista, setLista] = useState([]);
@@ -210,17 +210,21 @@ function Contactos() {
   const [descargarAlgunos, setDescargarAlgunos] = useState(false);
 
   const descargarContactos = e => {
+    console.log(e)
     e.preventDefault();
+    e.stopPropagation();
     juntados = unirResults();
-    setDescargarTodo(true);
     setTimeout(restaurarDescargar, 1000);
+    setDescargarTodo(true);
   };
 
   const descargarContactosParcial = e => {
     e.preventDefault();
+    e.stopPropagation();
+    juntados = unirResults();
     setIdsTildados(checkboxes.map(item => item.id));
-    setDescargarAlgunos(true);
     setTimeout(restaurarDescargar, 1000);
+    setDescargarAlgunos(true);
   };
 
   const restaurarDescargar = () => {
@@ -252,11 +256,31 @@ function Contactos() {
           console.log("header");
         } else {
           const canales = [];
-          canales[0] = {canal: contacto[10], cuenta: contacto[11], preferencia: contacto[12]}
-          canales[1] = {canal: contacto[13], cuenta: contacto[14], preferencia: contacto[15]}
-          canales[2] = {canal: contacto[16], cuenta: contacto[17], preferencia: contacto[18]}
-          canales[3] = {canal: contacto[19], cuenta: contacto[20], preferencia: contacto[21]}
-          canales[4] = {canal: contacto[22], cuenta: contacto[23], preferencia: contacto[24]}
+          canales[0] = {
+            canal: contacto[10],
+            cuenta: contacto[11],
+            preferencia: contacto[12],
+          };
+          canales[1] = {
+            canal: contacto[13],
+            cuenta: contacto[14],
+            preferencia: contacto[15],
+          };
+          canales[2] = {
+            canal: contacto[16],
+            cuenta: contacto[17],
+            preferencia: contacto[18],
+          };
+          canales[3] = {
+            canal: contacto[19],
+            cuenta: contacto[20],
+            preferencia: contacto[21],
+          };
+          canales[4] = {
+            canal: contacto[22],
+            cuenta: contacto[23],
+            preferencia: contacto[24],
+          };
 
           const aSumar = {
             apellido: contacto[0],
@@ -269,12 +293,12 @@ function Contactos() {
             ciudad: contacto[7],
             interes: contacto[8],
             canalPreferido: contacto[9],
-            canales: [...canales]
+            canales: [...canales],
           };
           contactos.push(aSumar);
         }
       });
-      console.log(contactos)
+      console.log(contactos);
       contactos.forEach(contacto => {
         servicioContacto
           .sumar(contacto)
@@ -285,41 +309,36 @@ function Contactos() {
       });
     };
     setSubir(false);
-    // window.location.reload();
+    window.location.reload();
   };
-
-  const ExcelFile = ReactExport.ExcelFile;
-  const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-  const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
   const resultBaj = results.map((item, i) => {
     let objeto = {};
     try {
-    item.canales.forEach((cadaCanal, num) => {
-      const canal = "canal" + num
-      const cuenta = "cuenta" + num
-      const preferencia = "preferencia" + num
-      objeto[canal] = cadaCanal.canal;
-      objeto[cuenta] = cadaCanal.cuenta;
-      objeto[preferencia] = cadaCanal.preferencia;
-    });}
-    catch { }
-    finally{
-    return objeto;
-  }
+      item.canales.forEach((cadaCanal, num) => {
+        const canal = "canal" + num;
+        const cuenta = "cuenta" + num;
+        const preferencia = "preferencia" + num;
+        objeto[canal] = cadaCanal.canal;
+        objeto[cuenta] = cadaCanal.cuenta;
+        objeto[preferencia] = cadaCanal.preferencia;
+      });
+    } catch {
+    } finally {
+      return objeto;
+    }
   });
 
   const unirResults = () => {
     let res = [];
-    for (let i = 0; i <= results.length -1; i++)
-    { res[i]= {...results[i], ...resultBaj[i], canales: "sí"}
-    // console.log(res[i], results[i], resultBaj[i])
+    for (let i = 0; i <= results.length - 1; i++) {
+      res[i] = {...results[i], ...resultBaj[i], canales: "sí"};
     }
-    return res
-  }
+    return res;
+  };
 
-  let juntados = unirResults()
-  
+  let juntados = unirResults();
+
   return (
     <div>
       <div className="tituloCompartido">
@@ -342,87 +361,43 @@ function Contactos() {
         ) : null}
       </div>
 
-          {!modoAgregar && !modoEditar &&
-      <div className="tituloCompartido">
-        <Form>
-          <Form.File
-            id="custom-file"
-            label="Traer Excel"
-            data-browse="Subir"
-            onChange={manejarSubida}
-            custom
-          />
-        </Form>
+      {!modoAgregar && !modoEditar && (
+        <div className="tituloCompartido">
+          <Form>
+            <Form.File
+              id="custom-file"
+              label="..."
+              data-browse="Elegir Excel"
+              onChange={manejarSubida}
+              custom
+            />
+          </Form>
 
-        {subir && (
-          <Button variant="danger" onClick={importarContactos}>
-            Importar Contactos
-          </Button>
-        )}
+          {subir && (
+            <Button variant="danger" onClick={importarContactos}>
+              Importar Contactos
+            </Button>
+          )}
 
+          {!checkboxesActivos && (
+            <Button variant="info" onClick={descargarContactos}>
+              Descargar todos en un .xlsx
+            </Button>
+          )}
 
+          {descargarTodo && <ContactosDescargar datos={juntados} />}
 
-        {!checkboxesActivos && (
-          <Button variant="info" onClick={descargarContactos}>
-            Descargar todos en un .xlsx
-          </Button>
-        )}
+          {checkboxesActivos && (
+            <Button variant="info" onClick={descargarContactosParcial}>
+              {cantidadCheckboxesActivos === 1
+                ? "Descargar el contacto seleccionado"
+                : `Descargar los ${cantidadCheckboxesActivos} contactos seleccionados`}
+            </Button>
+          )}
 
-        {descargarTodo && (
-          <ExcelFile hideElement="true" filename="Contactos">
-            <ExcelSheet data={juntados} name="Contactos">
-              <ExcelColumn label="Nombre" value="nombre" />
-              <ExcelColumn label="Apellido" value="apellido" />
-              <ExcelColumn label="Empresa" value="empresa" />
-              <ExcelColumn label="Cargo" value="cargo" />
-              <ExcelColumn label="Email" value="email" />
-              <ExcelColumn label="Región" value="region" />
-              <ExcelColumn label="País" value="pais" />
-              <ExcelColumn label="Ciudad" value="ciudad" />
-              <ExcelColumn label="Interes" value="interes" />
-              <ExcelColumn label="Canal Preferido" value="canalPreferido" />
-              <ExcelColumn label="Canal0" value="canal0" />
-              <ExcelColumn label="Cuenta0" value="cuenta0" />
-              <ExcelColumn label="Preferido0" value="preferido0" />
-              <ExcelColumn label="Canal1" value="canal1" />
-              <ExcelColumn label="Cuenta1" value="cuenta1" />
-              <ExcelColumn label="Preferido1" value="preferido1" />
-              <ExcelColumn label="Canal2" value="canal2" />
-              <ExcelColumn label="Cuenta2" value="cuenta2" />
-              <ExcelColumn label="Preferido2" value="preferido2" />
-              <ExcelColumn label="Canal3" value="canal3" />
-              <ExcelColumn label="Cuenta3" value="cuenta3" />
-              <ExcelColumn label="Preferido3" value="preferido3" />
-              <ExcelColumn label="Canal4" value="canal4" />
-              <ExcelColumn label="Cuenta4" value="cuenta4" />
-              <ExcelColumn label="Preferido4" value="preferido4" />
-              <ExcelColumn label="Canal5" value="canal5" />
-              <ExcelColumn label="Cuenta5" value="cuenta5" />
-              <ExcelColumn label="Preferido5" value="preferido5" />
-            </ExcelSheet>
-          </ExcelFile>
-        )}
-
-        {checkboxesActivos && (
-          <Button variant="info" onClick={descargarContactosParcial}>
-            {cantidadCheckboxesActivos === 1
-              ? "Descargar el contacto seleccionado"
-              : `Descargar los ${cantidadCheckboxesActivos} contactos seleccionados`}
-          </Button>
-        )}
-
-        {descargarAlgunos && (
-          <ExcelFile hideElement="true" filename="Contactos">
-            <ExcelSheet
-              data={results.filter(item => idsTildados.includes(item._id))}
-              name="Contactos">
-              <ExcelColumn label="Nombre" value="nombre" />
-              <ExcelColumn label="Apellido" value="apellido" />
-              <ExcelColumn label="Cargo" value="cargo" />
-            </ExcelSheet>
-          </ExcelFile>
-        )}
-      </div> }
+          {descargarAlgunos && <ContactosDescargar datos={juntados.filter(item => idsTildados.includes(item._id))} />}
+        </div>
+      )}
 
       {!modoAgregar && !modoEditar && (
         <p className="alinearDerecha">
