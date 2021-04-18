@@ -51,9 +51,9 @@ function UsuariosAgregar(props) {
     <div className="centrarContenidos">
       <div>
         {!props.editar ? (
-          <h3>Formulario de registro</h3>
+          <h1>Formulario de registro</h1>
         ) : (
-          <h3>Editar Usuario</h3>
+          <h1>Editar Usuario</h1>
         )}
         <Form onSubmit={guardarUsuario}>
           <Col className="bloqueCentrado" md={6}>

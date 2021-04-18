@@ -10,11 +10,11 @@ class servicioUsuario {
   }
 
   loguear(data) {
-    return http.post("/login", data);
+    return http.post("/usuario/login", data);
   }
 
   encontrar(data) {
-    return http.put("/ubicacion", data);
+    return http.put("/usuario", data);
   }
 
   actualizar(id, data) {

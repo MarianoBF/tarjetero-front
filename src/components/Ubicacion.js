@@ -157,13 +157,14 @@ function Ubicacion() {
 
   return (
     <div>
+    {!modoAgregar && !modoEditar &&
          <div className="tituloCompartido">
 
-      <h3>Ubicaciones: Región - País - Ciudad</h3>
-      {!modoAgregar && !modoEditar && <Button variant="primary" onClick={manejarAgregar}>Agregar</Button>}
+      <h1>Ubicaciones: Región - País - Ciudad</h1>
+       <Button variant="primary" onClick={manejarAgregar}>Agregar</Button>
 
     </div>
-
+}
       {!modoAgregar && !modoEditar ? (
         <div>
           <Table striped bordered>
@@ -182,7 +183,7 @@ function Ubicacion() {
       ) : null}
       {modoAgregar ? (
         <div>
-          <h3>Agregar:</h3>
+          <h1>Agregar:</h1>
           <Form onSubmit={sumarUbicacion}>
             <Col md={6}>
               <Form.Group>
@@ -217,7 +218,7 @@ function Ubicacion() {
       ) : null}
       {modoEditar ? (
         <div>
-          <h3>Editar:</h3>
+          <h1>Editar:</h1>
           <Form onSubmit={editarUbicacion}>
             <Col md={6}>
               <Form.Group>

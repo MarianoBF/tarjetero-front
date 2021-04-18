@@ -4,6 +4,7 @@ import servicioEmpresa from "../services/Empresa_servicio.js";
 import servicioContacto from "../services/Contacto_servicio.js";
 import Button from "react-bootstrap/Button";
 import {useRef} from "react";
+import excel from "../media/EjemploContactos.xlsx"
 
 function Config() {
   const mensaje = useRef(null);
@@ -72,16 +73,23 @@ function Config() {
     }
   };
 
+  const descargarModelo = () => {};
+
+
   return (
     <div className="centrarContenidos">
-      <h3>Configuración</h3>
+      <h1>Configuración</h1>
       <Button variant="warning" onClick={Cargador}>
         Cargar datos de prueba
       </Button>{" "}
       <Button variant="danger" onClick={Borrador}>
         Borrar todos los datos
       </Button>{" "}
-      <Button onClick={CerrarSesion}>Cerrar sesión</Button>
+      <Button onClick={CerrarSesion}>Cerrar sesión</Button> {" "}
+      <a href={excel} download> 
+<Button variant="info" onClick={descargarModelo}>
+          Bajar .xlsx modelo
+        </Button></a>
       <p ref={mensaje} className="mensajeSeparado"></p>
     </div>
   );

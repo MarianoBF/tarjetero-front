@@ -97,7 +97,6 @@ function ContactosAgregar(props) {
 
   const guardarContacto = e => {
     e.preventDefault();
-    console.log(valoresCanales)
     const data = {
       nombre: entrada.nombre,
       apellido: entrada.apellido,
@@ -185,11 +184,13 @@ function ContactosAgregar(props) {
   });
 
   const agregarCanal = () => {
+    if (cantidadCanales.length <5) {
     setCantidadCanales([...cantidadCanales, 1]);
     setValoresCanales([
       ...valoresCanales,
       {canal: "", cuenta: "", preferencia: ""},
     ]);
+  }
   };
 
   const removerCanal = () => {

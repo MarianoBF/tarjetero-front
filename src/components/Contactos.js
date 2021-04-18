@@ -3,10 +3,13 @@ import {useState, useEffect} from "react";
 import Table from "react-bootstrap/Table";
 import ContactosBuscador from "./ContactosBuscador";
 import ContactosAgregar from "./ContactosAgregar";
+import ContactosDescargar from "./ContactosDescargar";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import borrar from "../media/borrar.svg";
 import editar from "../media/editar.svg";
+import XLSX from "xlsx";
 
 function Contactos() {
   const [lista, setLista] = useState([]);
@@ -22,7 +25,6 @@ function Contactos() {
     servicioContacto
       .listar()
       .then(data => {
-        console.log(data.data)
         setLista(data.data);
         setResults(data.data);
       })
@@ -191,7 +193,6 @@ function Contactos() {
     setModoEditar(true);
     setModoAgregar(false);
     setEntradaEditar(item);
-    console.log("item", item)
   };
 
   const manejarCancelarEdicion = () => {
@@ -202,10 +203,147 @@ function Contactos() {
 
   const initialValueCanales = [{canal: "", cuenta: "", preferencia: ""}];
 
+  const [idsTildados, setIdsTildados] = useState([]);
+
+  const [descargarTodo, setDescargarTodo] = useState(false);
+
+  const [descargarAlgunos, setDescargarAlgunos] = useState(false);
+
+  const descargarContactos = e => {
+    console.log(e)
+    e.preventDefault();
+    e.stopPropagation();
+    juntados = unirResults();
+    setTimeout(restaurarDescargar, 1000);
+    setDescargarTodo(true);
+  };
+
+  const descargarContactosParcial = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    juntados = unirResults();
+    setIdsTildados(checkboxes.map(item => item.id));
+    setTimeout(restaurarDescargar, 1000);
+    setDescargarAlgunos(true);
+  };
+
+  const restaurarDescargar = () => {
+    setDescargarAlgunos(false);
+    setDescargarTodo(false);
+  };
+
+  const [archivo, setArchivo] = useState();
+  const [subir, setSubir] = useState();
+
+  const manejarSubida = event => {
+    setArchivo(event.target.files[0]);
+    setSubir(true);
+  };
+
+  const importarContactos = () => {
+    const reader = new FileReader();
+    reader.readAsBinaryString(archivo);
+    reader.onload = evt => {
+      const bstr = evt.target.result;
+      const wb = XLSX.read(bstr, {type: "binary"});
+      const wsname = wb.SheetNames[0];
+      const ws = wb.Sheets[wsname];
+      const contactosAux = XLSX.utils.sheet_to_json(ws, {header: 1});
+      console.log("aux", contactosAux);
+      let contactos = [];
+      contactosAux.forEach((contacto, i) => {
+        if (i === 0) {
+          console.log("header");
+        } else {
+          const canales = [];
+          canales[0] = {
+            canal: contacto[11],
+            cuenta: contacto[12],
+            preferencia: contacto[13],
+          };
+          canales[1] = {
+            canal: contacto[14],
+            cuenta: contacto[15],
+            preferencia: contacto[16],
+          };
+          canales[2] = {
+            canal: contacto[17],
+            cuenta: contacto[18],
+            preferencia: contacto[19],
+          };
+          canales[3] = {
+            canal: contacto[20],
+            cuenta: contacto[21],
+            preferencia: contacto[22],
+          };
+          canales[4] = {
+            canal: contacto[23],
+            cuenta: contacto[24],
+            preferencia: contacto[25],
+          };
+
+          const aSumar = {
+            nombre: contacto[0],
+            apellido: contacto[1],
+            empresa: contacto[2],
+            cargo: contacto[3],
+            email: contacto[4],
+            region: contacto[5],
+            pais: contacto[6],
+            ciudad: contacto[7],
+            direccion: contacto[8],
+            interes: contacto[9],
+            canalPreferido: contacto[10],
+            canales: [...canales],
+          };
+          contactos.push(aSumar);
+        }
+      });
+      console.log(contactos);
+      contactos.forEach(contacto => {
+        servicioContacto
+          .sumar(contacto)
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(() => console.log("No se pudo agregar el contacto"));
+      });
+    };
+    setSubir(false);
+    window.location.reload();
+  };
+
+  const resultBaj = results.map((item, i) => {
+    let objeto = {};
+    try {
+      item.canales.forEach((cadaCanal, num) => {
+        const canal = "canal" + num;
+        const cuenta = "cuenta" + num;
+        const preferencia = "preferencia" + num;
+        objeto[canal] = cadaCanal.canal;
+        objeto[cuenta] = cadaCanal.cuenta;
+        objeto[preferencia] = cadaCanal.preferencia;
+      });
+    } catch {
+    } finally {
+      return objeto;
+    }
+  });
+
+  const unirResults = () => {
+    let res = [];
+    for (let i = 0; i <= results.length - 1; i++) {
+      res[i] = {...results[i], ...resultBaj[i], canales: "sí"};
+    }
+    return res;
+  };
+
+  let juntados = unirResults();
+
   return (
     <div>
       <div className="tituloCompartido">
-        {!modoAgregar && !modoEditar && <h3>Contactos</h3>}
+        {!modoAgregar && !modoEditar && <h1>Contactos</h1>}
 
         {!modoAgregar && !modoEditar ? (
           <ContactosBuscador lista={lista} onChange={filtrador} />
@@ -224,7 +362,49 @@ function Contactos() {
         ) : null}
       </div>
 
-      {!modoAgregar && !modoEditar && <p className="alinearDerecha">*Click para ver todos los canales disponibles</p>}
+      {!modoAgregar && !modoEditar && (
+        <div className="tituloCompartido">
+          <Form>
+            <Form.File
+              id="custom-file"
+              label="..."
+              data-browse="Elegir Excel"
+              onChange={manejarSubida}
+              custom
+            />
+          </Form>
+
+          {subir && (
+            <Button variant="danger" onClick={importarContactos}>
+              Importar Contactos
+            </Button>
+          )}
+
+          {!checkboxesActivos && (
+            <Button variant="info" onClick={descargarContactos}>
+              Descargar todos en un .xlsx
+            </Button>
+          )}
+
+          {descargarTodo && <ContactosDescargar datos={juntados} />}
+
+          {checkboxesActivos && (
+            <Button variant="info" onClick={descargarContactosParcial}>
+              {cantidadCheckboxesActivos === 1
+                ? "Descargar el contacto seleccionado"
+                : `Descargar los ${cantidadCheckboxesActivos} contactos seleccionados`}
+            </Button>
+          )}
+
+          {descargarAlgunos && <ContactosDescargar datos={juntados.filter(item => idsTildados.includes(item._id))} />}
+        </div>
+      )}
+
+      {!modoAgregar && !modoEditar && (
+        <p className="alinearDerecha">
+          *Click para ver todos los canales disponibles
+        </p>
+      )}
 
       {!modoAgregar && !modoEditar ? (
         <div>
