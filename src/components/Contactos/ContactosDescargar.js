@@ -34,9 +34,6 @@ function ContactosDescargar(props) {
                 <ExcelColumn label="Canal4" value="canal4" />
                 <ExcelColumn label="Cuenta4" value="cuenta4" />
                 <ExcelColumn label="Preferido4" value="preferencia4" />
-                <ExcelColumn label="Canal5" value="canal5" />
-                <ExcelColumn label="Cuenta5" value="cuenta5" />
-                <ExcelColumn label="Preferido5" value="preferencia5" />
               </ExcelSheet>
             </ExcelFile>
           )

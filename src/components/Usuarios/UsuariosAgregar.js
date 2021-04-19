@@ -1,4 +1,4 @@
-import servicioUsuario from "../services/Usuario_servicio";
+import servicioUsuario from "../../services/Usuario_servicio";
 import {useState} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -79,25 +79,21 @@ function UsuariosAgregar(props) {
                 onChange={manejarInput}
                 name="email"
                 required></Form.Control>
-              {!props.editar && (
-                <>
-                  <Form.Label>Password: </Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={entrada.password}
-                    onChange={manejarInput}
-                    name="password"
-                    autoComplete="new-password"
-                    required></Form.Control>
-                  <Form.Label>Confirmar Password: </Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={entrada.confirmarPassword}
-                    onChange={manejarInput}
-                    name="confirmarPassword"
-                    required></Form.Control>{" "}
-                </>
-              )}
+              <Form.Label>Password: </Form.Label>
+              <Form.Control
+                type="password"
+                value={entrada.password}
+                onChange={manejarInput}
+                name="password"
+                autoComplete="new-password"
+                required></Form.Control>
+              <Form.Label>Confirmar Password: </Form.Label>
+              <Form.Control
+                type="password"
+                value={entrada.confirmarPassword}
+                onChange={manejarInput}
+                name="confirmarPassword"
+                required></Form.Control>{" "}
               <Form.Label>Perfil: </Form.Label>
               <Form.Control
                 as="select"

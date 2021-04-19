@@ -1,4 +1,4 @@
-import servicioUsuario from "../services/Usuario_servicio";
+import servicioUsuario from "../../services/Usuario_servicio";
 import {useState} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -35,8 +35,8 @@ function Login() {
           : window.location.assign("/empresas");
       })
       .catch(error => {
-        console.log("No se pudo iniciar sesión");
         console.log(error);
+        alert("Datos incorrectos, reintente")
       });
   };
 

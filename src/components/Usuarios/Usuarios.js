@@ -1,10 +1,10 @@
-import servicioUsuario from "../services/Usuario_servicio";
+import servicioUsuario from "../../services/Usuario_servicio";
 import {useState, useEffect} from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import jwt_decode from "jwt-decode";
-import borrar from "../media/borrar.svg";
-import editar from "../media/editar.svg";
+import borrar from "../../media/borrar.svg";
+import editar from "../../media/editar.svg";
 import UsuarioAgregar from "./UsuariosAgregar.js";
 
 function Usuarios() {

@@ -1,6 +1,6 @@
-import servicioContacto from "../services/Contacto_servicio";
-import servicioEmpresa from "../services/Empresa_servicio";
-import servicioUbicacion from "../services/Ubicacion_servicio";
+import servicioContacto from "../../services/Contacto_servicio";
+import servicioEmpresa from "../../services/Empresa_servicio";
+import servicioUbicacion from "../../services/Ubicacion_servicio";
 import {useState, useEffect, useRef} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";

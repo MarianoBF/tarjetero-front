@@ -48,6 +48,13 @@ h2 {
   color: #007bff;
 }
 
+h3 {
+  font-size: 1.1rem;
+  margin: 3vh 0;
+  color: #007bff;
+}
+
+
 .clickeable {
   cursor: pointer;
 }

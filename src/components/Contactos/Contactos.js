@@ -1,4 +1,4 @@
-import servicioContacto from "../services/Contacto_servicio";
+import servicioContacto from "../../services/Contacto_servicio";
 import {useState, useEffect} from "react";
 import Table from "react-bootstrap/Table";
 import ContactosBuscador from "./ContactosBuscador";
@@ -7,8 +7,8 @@ import ContactosDescargar from "./ContactosDescargar";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import borrar from "../media/borrar.svg";
-import editar from "../media/editar.svg";
+import borrar from "../../media/borrar.svg";
+import editar from "../../media/editar.svg";
 import XLSX from "xlsx";
 
 function Contactos() {
@@ -87,18 +87,10 @@ function Contactos() {
     }
   };
 
-  const initialCheckboxes = [
-    {id: "", checked: "false"},
-    {id: "", checked: "false"},
-    {id: "", checked: "false"},
-    {id: "", checked: "false"},
-    {id: "", checked: "false"},
-    {id: "", checked: "false"},
-    {id: "", checked: "false"},
-    {id: "", checked: "false"},
-    {id: "", checked: "false"},
-    {id: "", checked: "false"},
-  ];
+  const initialCheckboxes = new Array(lista.length + 100);
+  for (let i = 0; i < lista.length + 100; i++) {
+    initialCheckboxes[i] = {id: "", checked: "false"};
+  }
 
   const [checkboxes, setCheckboxes] = useState(initialCheckboxes);
   const [checkboxesActivos, setCheckboxesActivos] = useState(false);
@@ -210,9 +202,7 @@ function Contactos() {
   const [descargarAlgunos, setDescargarAlgunos] = useState(false);
 
   const descargarContactos = e => {
-    console.log(e)
     e.preventDefault();
-    e.stopPropagation();
     juntados = unirResults();
     setTimeout(restaurarDescargar, 1000);
     setDescargarTodo(true);
@@ -220,9 +210,9 @@ function Contactos() {
 
   const descargarContactosParcial = e => {
     e.preventDefault();
-    e.stopPropagation();
     juntados = unirResults();
-    setIdsTildados(checkboxes.map(item => item.id));
+    const checkboxesOK = checkboxes.filter(item => item.checked === true);
+    setIdsTildados(checkboxesOK.map(item => item.id));
     setTimeout(restaurarDescargar, 1000);
     setDescargarAlgunos(true);
   };
@@ -234,8 +224,10 @@ function Contactos() {
 
   const [archivo, setArchivo] = useState();
   const [subir, setSubir] = useState();
+  const [nombreArchivo, setNombreArchivo] = useState("...");  
 
   const manejarSubida = event => {
+    setNombreArchivo(event.target.files[0].name)
     setArchivo(event.target.files[0]);
     setSubir(true);
   };
@@ -249,11 +241,10 @@ function Contactos() {
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       const contactosAux = XLSX.utils.sheet_to_json(ws, {header: 1});
-      console.log("aux", contactosAux);
       let contactos = [];
       contactosAux.forEach((contacto, i) => {
         if (i === 0) {
-          console.log("header");
+          console.log("leyendo Excel");
         } else {
           const canales = [];
           canales[0] = {
@@ -310,7 +301,7 @@ function Contactos() {
       });
     };
     setSubir(false);
-    window.location.reload();
+    // window.location.reload();
   };
 
   const resultBaj = results.map((item, i) => {
@@ -363,44 +354,6 @@ function Contactos() {
       </div>
 
       {!modoAgregar && !modoEditar && (
-        <div className="tituloCompartido">
-          <Form>
-            <Form.File
-              id="custom-file"
-              label="..."
-              data-browse="Elegir Excel"
-              onChange={manejarSubida}
-              custom
-            />
-          </Form>
-
-          {subir && (
-            <Button variant="danger" onClick={importarContactos}>
-              Importar Contactos
-            </Button>
-          )}
-
-          {!checkboxesActivos && (
-            <Button variant="info" onClick={descargarContactos}>
-              Descargar todos en un .xlsx
-            </Button>
-          )}
-
-          {descargarTodo && <ContactosDescargar datos={juntados} />}
-
-          {checkboxesActivos && (
-            <Button variant="info" onClick={descargarContactosParcial}>
-              {cantidadCheckboxesActivos === 1
-                ? "Descargar el contacto seleccionado"
-                : `Descargar los ${cantidadCheckboxesActivos} contactos seleccionados`}
-            </Button>
-          )}
-
-          {descargarAlgunos && <ContactosDescargar datos={juntados.filter(item => idsTildados.includes(item._id))} />}
-        </div>
-      )}
-
-      {!modoAgregar && !modoEditar && (
         <p className="alinearDerecha">
           *Click para ver todos los canales disponibles
         </p>
@@ -415,7 +368,7 @@ function Contactos() {
                 <th>Nombre</th>
                 <th>Apellido</th>
                 <th>Ciudad</th>
-                <th>Empresa</th>
+                <th>Compañía</th>
                 <th>Cargo</th>
                 <th>Canal Preferido*</th>
                 <th>Interés</th>
@@ -445,6 +398,53 @@ function Contactos() {
           canales={[...entradaEditar.canales]}
         />
       ) : null}
+
+      {!modoAgregar && !modoEditar && (
+        <>
+          <hr />
+          <h3>Importar de / Exportar a Excel:</h3>
+          <div className="tituloCompartido">
+            <Form>
+              <Form.File
+                id="custom-file"
+                label={nombreArchivo}
+                data-browse="Elegir Excel"
+                feedback="aa"
+                onChange={manejarSubida}
+                custom
+              />
+            </Form>
+
+            {subir && (
+              <Button variant="danger" onClick={importarContactos}>
+                Importar Contactos
+              </Button>
+            )}
+
+            {!checkboxesActivos && (
+              <Button variant="info" onClick={descargarContactos}>
+                Descargar todos en un .xlsx
+              </Button>
+            )}
+
+            {descargarTodo && <ContactosDescargar datos={juntados} />}
+
+            {checkboxesActivos && (
+              <Button variant="info" onClick={descargarContactosParcial}>
+                {cantidadCheckboxesActivos === 1
+                  ? "Descargar el contacto seleccionado"
+                  : `Descargar los ${cantidadCheckboxesActivos} contactos seleccionados`}
+              </Button>
+            )}
+
+            {descargarAlgunos && (
+              <ContactosDescargar
+                datos={juntados.filter(item => idsTildados.includes(item._id))}
+              />
+            )}
+          </div>
+        </>
+      )}
 
       {modalCanales && (
         <Modal show={modalCanales} onHide={manejarCerrar}>

@@ -88,7 +88,7 @@ function Config() {
       <Button onClick={CerrarSesion}>Cerrar sesión</Button> {" "}
       <a href={excel} download> 
 <Button variant="info" onClick={descargarModelo}>
-          Bajar .xlsx modelo
+          Bajar .xlsx modelo para importar archivos
         </Button></a>
       <p ref={mensaje} className="mensajeSeparado"></p>
     </div>
