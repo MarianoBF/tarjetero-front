@@ -301,7 +301,7 @@ function Contactos() {
       });
     };
     setSubir(false);
-    // window.location.reload();
+    window.location.reload();
   };
 
   const resultBaj = results.map((item, i) => {
