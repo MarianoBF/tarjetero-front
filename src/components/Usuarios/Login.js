@@ -31,8 +31,8 @@ function Login() {
         sessionStorage.setItem("JWT", JSON.stringify(token));
         let perfil = jwt_decode(token).perfil;
         perfil === "Admin"
-          ? window.location.assign("/usuarios")
-          : window.location.assign("/empresas");
+          ? window.location.assign("https://marianobf.github.io/tarjetero-front/#/usuarios")
+          : window.location.assign("https://marianobf.github.io/tarjetero-front/#/empresas");
       })
       .catch(error => {
         console.log(error);
