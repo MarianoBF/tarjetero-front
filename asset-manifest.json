@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/tarjetero-front/static/css/main.ee9dc682.chunk.css",
-    "main.js": "/tarjetero-front/static/js/main.ac96b450.chunk.js",
-    "main.js.map": "/tarjetero-front/static/js/main.ac96b450.chunk.js.map",
+    "main.js": "/tarjetero-front/static/js/main.09efce0f.chunk.js",
+    "main.js.map": "/tarjetero-front/static/js/main.09efce0f.chunk.js.map",
     "runtime-main.js": "/tarjetero-front/static/js/runtime-main.7921c472.js",
     "runtime-main.js.map": "/tarjetero-front/static/js/runtime-main.7921c472.js.map",
     "static/css/2.4c97ca4f.chunk.css": "/tarjetero-front/static/css/2.4c97ca4f.chunk.css",
@@ -22,6 +22,6 @@
     "static/css/2.4c97ca4f.chunk.css",
     "static/js/2.58752ced.chunk.js",
     "static/css/main.ee9dc682.chunk.css",
-    "static/js/main.ac96b450.chunk.js"
+    "static/js/main.09efce0f.chunk.js"
   ]
 }
