@@ -1,11 +1,23 @@
 import servicioUsuario from "../../services/Usuario_servicio";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import jwt_decode from "jwt-decode";
 
 function Login() {
+  useEffect(() => {
+    try {
+      let token = JSON.parse(sessionStorage.getItem("JWT"));
+      token = jwt_decode(token);
+      if (token.exp > new Date().getTime() / 1000) {
+        window.location.assign("/#/contactos");
+      }
+    } catch {
+      console.log("Debe loguearse");
+    }
+  }, []);
+
   const valorInicialLog = {
     email: "",
     password: "",
@@ -29,14 +41,11 @@ function Login() {
       .then(response => {
         let token = response.data;
         sessionStorage.setItem("JWT", JSON.stringify(token));
-        let perfil = jwt_decode(token).perfil;
-        perfil === "Admin"
-          ? window.location.assign("https://marianobf.github.io/tarjetero-front/#/usuarios")
-          : window.location.assign("https://marianobf.github.io/tarjetero-front/#/empresas");
+        window.location.reload();
       })
       .catch(error => {
         console.log(error);
-        alert("Datos incorrectos, reintente")
+        alert("Datos incorrectos, reintente");
       });
   };
 
