@@ -1,6 +1,6 @@
 import axios from "axios";
 
-let JWT = (JSON.parse(sessionStorage.getItem('JWT'))) || ""
+// let JWT = (JSON.parse(sessionStorage.getItem('JWT'))) || ""
 
 export default axios.create({
     baseURL: "http://localhost:3500/api/v1",
@@ -8,6 +8,6 @@ export default axios.create({
     credentials: 'same-origin',
     headers: {
         "Content-type": "application/json",
-        "Authorization": "Bearer " + JWT
+        // "Authorization": "Bearer " + JWT
     }
 })
