@@ -12,7 +12,7 @@ function Login() {
       let token = JSON.parse(sessionStorage.getItem("JWT"));
       token = jwt_decode(token);
       if (token.exp > new Date().getTime() / 1000) {
-        window.location.assign("https://marianobf.github.io/tarjetero-front/#/contactos");
+        window.location.assign("/#/contactos");
       }
     } catch {
       console.log("Debe loguearse");
