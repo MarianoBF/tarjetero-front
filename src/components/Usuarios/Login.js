@@ -41,6 +41,7 @@ function Login() {
     servicioUsuario
       .loguear(data)
       .then(response => {
+        console.log(response)
         let token = response.data;
         sessionStorage.setItem("JWT", JSON.stringify(token));
         window.location.reload();
