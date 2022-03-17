@@ -9,7 +9,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import borrar from "../../media/borrar.svg";
 import editar from "../../media/editar.svg";
-import XLSX from "xlsx";
+import {read, utils} from "xlsx";
 
 function Contactos() {
   const [lista, setLista] = useState([]);
@@ -237,10 +237,10 @@ function Contactos() {
     reader.readAsBinaryString(archivo);
     reader.onload = evt => {
       const bstr = evt.target.result;
-      const wb = XLSX.read(bstr, {type: "binary"});
+      const wb = read(bstr, {type: "binary"});
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
-      const contactosAux = XLSX.utils.sheet_to_json(ws, {header: 1});
+      const contactosAux = utils.sheet_to_json(ws, {header: 1});
       let contactos = [];
       contactosAux.forEach((contacto, i) => {
         if (i === 0) {
