@@ -1,11 +1,11 @@
-import servicioEmpresa from "../services/Empresa_servicio";
-import {useState, useEffect} from "react";
+import EmpresaService from "../services/EmpresaService";
+import { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
-import borrar from "../media/borrar.svg";
-import editar from "../media/editar.svg";
+import borrar from "../assets/borrar.svg";
+import editar from "../assets/editar.svg";
 
 function Ubicacion() {
   const [lista, setLista] = useState([]);
@@ -13,9 +13,9 @@ function Ubicacion() {
   const [modoEditar, setModoEditar] = useState(false);
 
   useEffect(() => {
-    servicioEmpresa
+    EmpresaService
       .listar()
-      .then(data => {
+      .then((data) => {
         setLista(data.data);
       })
       .catch(() => console.log("No se pudo traer la información"));
@@ -33,14 +33,14 @@ function Ubicacion() {
   const [entrada, setEntrada] = useState(valorInicial);
   const [entradaEditar, setEntradaEditar] = useState(valorInicial);
 
-  const manejarInput = event => {
-    const {name, value} = event.target;
-    setEntrada({...entrada, [name]: value});
+  const manejarInput = (event) => {
+    const { name, value } = event.target;
+    setEntrada({ ...entrada, [name]: value });
   };
 
-  const manejarInputEdit = event => {
-    const {name, value} = event.target;
-    setEntradaEditar({...entradaEditar, [name]: value});
+  const manejarInputEdit = (event) => {
+    const { name, value } = event.target;
+    setEntradaEditar({ ...entradaEditar, [name]: value });
   };
 
   const manejarAgregar = () => {
@@ -62,9 +62,9 @@ function Ubicacion() {
     });
   };
 
-  const manejarBorrar = nombre => {
+  const manejarBorrar = (nombre) => {
     try {
-      servicioEmpresa.borrar(nombre);
+      EmpresaService.borrar(nombre);
     } catch {
       console.log("No se pudo borrar la ubicación");
     } finally {
@@ -101,14 +101,16 @@ function Ubicacion() {
                   item.email,
                   item.telefono
                 )
-              }>
+              }
+            >
               <img className="icon" src={editar} alt="editar" />
             </div>
           </td>
           <td>
             <div
               className="centrarContenidos clickeable"
-              onClick={() => manejarBorrar(item.nombre)}>
+              onClick={() => manejarBorrar(item.nombre)}
+            >
               <img className="icon" src={borrar} alt="borrar" />
             </div>
           </td>
@@ -116,7 +118,7 @@ function Ubicacion() {
       );
     });
 
-  const editarEmpresa = e => {
+  const editarEmpresa = (e) => {
     e.preventDefault();
     const data = {
       nombre: entradaEditar.nombre,
@@ -127,7 +129,7 @@ function Ubicacion() {
       telefono: entradaEditar.telefono,
     };
     try {
-      servicioEmpresa.actualizar(data).then(response => {
+      EmpresaService.actualizar(data).then((response) => {
         console.log(response.data);
       });
     } catch {
@@ -137,7 +139,7 @@ function Ubicacion() {
     }
   };
 
-  const sumarEmpresa = e => {
+  const sumarEmpresa = (e) => {
     e.preventDefault();
     const data = {
       nombre: entrada.nombre,
@@ -148,7 +150,7 @@ function Ubicacion() {
       telefono: entrada.telefono,
     };
     try {
-      servicioEmpresa.sumar(data).then(response => {
+      EmpresaService.sumar(data).then((response) => {
         console.log(response.data);
       });
     } catch {
@@ -160,16 +162,17 @@ function Ubicacion() {
 
   return (
     <div>
-    {!modoAgregar && !modoEditar &&
-      <div className="tituloCompartido">
-        <h1>Compañías</h1>
+      {!modoAgregar && !modoEditar && (
+        <div className="tituloCompartido">
+          <h1>Compañías</h1>
 
-        {!modoAgregar && (
-          <Button onClick={manejarAgregar} variant="primary">
-            Agregar
-          </Button>
-        )}
-      </div>}
+          {!modoAgregar && (
+            <Button onClick={manejarAgregar} variant="primary">
+              Agregar
+            </Button>
+          )}
+        </div>
+      )}
       {!modoAgregar && !modoEditar ? (
         <div>
           <Table striped bordered>
@@ -201,42 +204,48 @@ function Ubicacion() {
                   value={entrada.nombre}
                   onChange={manejarInput}
                   name="nombre"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>País: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entrada.pais}
                   onChange={manejarInput}
                   name="pais"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>Ciudad: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entrada.ciudad}
                   onChange={manejarInput}
                   name="ciudad"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>Dirección: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entrada.direccion}
                   onChange={manejarInput}
                   name="direccion"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>Email: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entrada.email}
                   onChange={manejarInput}
                   name="email"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>Teléfono: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entrada.telefono}
                   onChange={manejarInput}
                   name="telefono"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
               </Form.Group>
             </Col>
             <Button type="submit">Guardar</Button>{" "}
@@ -258,42 +267,48 @@ function Ubicacion() {
                   value={entradaEditar.nombre}
                   onChange={manejarInputEdit}
                   name="nombre"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>País: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entradaEditar.pais}
                   onChange={manejarInputEdit}
                   name="pais"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>Ciudad: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entradaEditar.ciudad}
                   onChange={manejarInputEdit}
                   name="ciudad"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>Dirección: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entradaEditar.direccion}
                   onChange={manejarInputEdit}
                   name="direccion"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>Email: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entradaEditar.email}
                   onChange={manejarInputEdit}
                   name="email"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>Teléfono: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entradaEditar.telefono}
                   onChange={manejarInputEdit}
                   name="telefono"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
               </Form.Group>
             </Col>
             <Button type="submit">Guardar</Button>{" "}

@@ -10,7 +10,7 @@ import {Switch, Route, Link} from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import ProtectedRoute from "./components/ProtectedRoute";
-import logo from "./media/logo.svg";
+import logo from "./assets/logo.svg";
 import jwt_decode from "jwt-decode";
 
 function App() {

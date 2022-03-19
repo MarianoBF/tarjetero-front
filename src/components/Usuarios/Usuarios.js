@@ -1,10 +1,10 @@
-import servicioUsuario from "../../services/Usuario_servicio";
+import UsuarioService from "../../services/UsuarioService";
 import {useState, useEffect} from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import jwt_decode from "jwt-decode";
-import borrar from "../../media/borrar.svg";
-import editar from "../../media/editar.svg";
+import borrar from "../../assets/borrar.svg";
+import editar from "../../assets/editar.svg";
 import UsuarioAgregar from "./UsuariosAgregar.js";
 
 function Usuarios() {
@@ -27,7 +27,7 @@ function Usuarios() {
   const [listadoUsuarios, setListadoUsuarios] = useState([]);
 
   const manejarBorrar = id => {
-    servicioUsuario.borrar(id);
+    UsuarioService.borrar(id);
     window.location.reload();
   };
 
@@ -71,7 +71,7 @@ function Usuarios() {
     });
 
   useEffect(() => {
-    servicioUsuario
+    UsuarioService
       .listar()
       .then(data => {
         setListadoUsuarios(data.data);

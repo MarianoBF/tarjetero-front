@@ -1,5 +1,5 @@
-import servicioContacto from "../../services/Contacto_servicio";
-import {useState, useEffect} from "react";
+import ContactoService from "../../services/ContactoService";
+import { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
 import ContactosBuscador from "./ContactosBuscador";
 import ContactosAgregar from "./ContactosAgregar";
@@ -7,9 +7,9 @@ import ContactosDescargar from "./ContactosDescargar";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import borrar from "../../media/borrar.svg";
-import editar from "../../media/editar.svg";
-import {read, utils} from "xlsx";
+import borrar from "../../assets/borrar.svg";
+import editar from "../../assets/editar.svg";
+import { read, utils } from "xlsx";
 
 function Contactos() {
   const [lista, setLista] = useState([]);
@@ -22,9 +22,9 @@ function Contactos() {
   };
 
   useEffect(() => {
-    servicioContacto
+    ContactoService
       .listar()
-      .then(data => {
+      .then((data) => {
         setLista(data.data);
         setResults(data.data);
       })
@@ -47,7 +47,7 @@ function Contactos() {
   const [modalCanales, setModalCanales] = useState(false);
   const [contenidosModalCanales, setContenidosModalCanales] = useState([]);
   const manejarCerrar = () => setModalCanales(false);
-  const manejarMostrar = item => {
+  const manejarMostrar = (item) => {
     setModalCanales(true);
     setContenidosModalCanales(item);
   };
@@ -69,17 +69,17 @@ function Contactos() {
 
   const manejarBorrar = (id, nombre, apellido) => {
     setModalBorrar(true);
-    setContactoParaBorrar({id: id, nombre: nombre, apellido: apellido});
+    setContactoParaBorrar({ id: id, nombre: nombre, apellido: apellido });
   };
 
-  const manejarCerrarBorrar = item => {
+  const manejarCerrarBorrar = (item) => {
     setModalBorrar(false);
   };
 
   const manejarModalBorrar = () => {
     setModalBorrar(false);
     try {
-      servicioContacto.borrar(contactoParaBorrar.id);
+      ContactoService.borrar(contactoParaBorrar.id);
     } catch {
       console.log("No se pudo borrar la ubicación");
     } finally {
@@ -89,7 +89,7 @@ function Contactos() {
 
   const initialCheckboxes = new Array(lista.length + 100);
   for (let i = 0; i < lista.length + 100; i++) {
-    initialCheckboxes[i] = {id: "", checked: "false"};
+    initialCheckboxes[i] = { id: "", checked: "false" };
   }
 
   const [checkboxes, setCheckboxes] = useState(initialCheckboxes);
@@ -102,18 +102,18 @@ function Contactos() {
     nuevosCheckboxes[i].checked = e.target.checked;
     setCheckboxes(nuevosCheckboxes);
     setCantidadCheckboxesActivos(
-      checkboxes.filter(item => item.checked === true).length
+      checkboxes.filter((item) => item.checked === true).length
     );
-    checkboxes.filter(item => item.checked === true).length > 0
+    checkboxes.filter((item) => item.checked === true).length > 0
       ? setCheckboxesActivos(true)
       : setCheckboxesActivos(false);
   };
 
   const borrarCheckboxes = () => {
-    const borrables = checkboxes.filter(item => item.checked === true);
+    const borrables = checkboxes.filter((item) => item.checked === true);
     try {
-      borrables.forEach(item => {
-        servicioContacto.borrar(item.id);
+      borrables.forEach((item) => {
+        ContactoService.borrar(item.id);
       });
     } catch {
       console.log("No se pudo borrar la ubicación");
@@ -132,7 +132,7 @@ function Contactos() {
               type="checkbox"
               label=""
               value={checkboxes[i].checked}
-              onChange={e => manejarCheckbox(e, item._id, i)}
+              onChange={(e) => manejarCheckbox(e, item._id, i)}
             />
           </td>
           <td>{item.nombre}</td>
@@ -143,7 +143,8 @@ function Contactos() {
           <td>
             <p
               className="clickeable textoSubrayado margenCero"
-              onClick={() => manejarMostrar(item.canales)}>
+              onClick={() => manejarMostrar(item.canales)}
+            >
               {item.canalPreferido}
             </p>
           </td>
@@ -158,7 +159,8 @@ function Contactos() {
               className="clickeable"
               onClick={() =>
                 manejarBorrar(item._id, item.nombre, item.apellido)
-              }>
+              }
+            >
               <img className="icon" src={borrar} alt="borrar" />
             </div>
           </td>
@@ -166,10 +168,10 @@ function Contactos() {
       );
     });
 
-  const filtrador = filtro => {
+  const filtrador = (filtro) => {
     setResults(
       lista.filter(
-        item =>
+        (item) =>
           item.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
           item.apellido.toLowerCase().includes(filtro.toLowerCase()) ||
           item.ciudad.toLowerCase().includes(filtro.toLowerCase()) ||
@@ -181,7 +183,7 @@ function Contactos() {
 
   const [entradaEditar, setEntradaEditar] = useState();
 
-  const manejarEditar = item => {
+  const manejarEditar = (item) => {
     setModoEditar(true);
     setModoAgregar(false);
     setEntradaEditar(item);
@@ -193,7 +195,7 @@ function Contactos() {
     setEntradaEditar(valorInicial);
   };
 
-  const initialValueCanales = [{canal: "", cuenta: "", preferencia: ""}];
+  const initialValueCanales = [{ canal: "", cuenta: "", preferencia: "" }];
 
   const [idsTildados, setIdsTildados] = useState([]);
 
@@ -201,18 +203,18 @@ function Contactos() {
 
   const [descargarAlgunos, setDescargarAlgunos] = useState(false);
 
-  const descargarContactos = e => {
+  const descargarContactos = (e) => {
     e.preventDefault();
     juntados = unirResults();
     setTimeout(restaurarDescargar, 1000);
     setDescargarTodo(true);
   };
 
-  const descargarContactosParcial = e => {
+  const descargarContactosParcial = (e) => {
     e.preventDefault();
     juntados = unirResults();
-    const checkboxesOK = checkboxes.filter(item => item.checked === true);
-    setIdsTildados(checkboxesOK.map(item => item.id));
+    const checkboxesOK = checkboxes.filter((item) => item.checked === true);
+    setIdsTildados(checkboxesOK.map((item) => item.id));
     setTimeout(restaurarDescargar, 1000);
     setDescargarAlgunos(true);
   };
@@ -224,10 +226,10 @@ function Contactos() {
 
   const [archivo, setArchivo] = useState();
   const [subir, setSubir] = useState();
-  const [nombreArchivo, setNombreArchivo] = useState("...");  
+  const [nombreArchivo, setNombreArchivo] = useState("...");
 
-  const manejarSubida = event => {
-    setNombreArchivo(event.target.files[0].name)
+  const manejarSubida = (event) => {
+    setNombreArchivo(event.target.files[0].name);
     setArchivo(event.target.files[0]);
     setSubir(true);
   };
@@ -235,12 +237,12 @@ function Contactos() {
   const importarContactos = () => {
     const reader = new FileReader();
     reader.readAsBinaryString(archivo);
-    reader.onload = evt => {
+    reader.onload = (evt) => {
       const bstr = evt.target.result;
-      const wb = read(bstr, {type: "binary"});
+      const wb = read(bstr, { type: "binary" });
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
-      const contactosAux = utils.sheet_to_json(ws, {header: 1});
+      const contactosAux = utils.sheet_to_json(ws, { header: 1 });
       let contactos = [];
       contactosAux.forEach((contacto, i) => {
         if (i === 0) {
@@ -291,10 +293,10 @@ function Contactos() {
         }
       });
       console.log(contactos);
-      contactos.forEach(contacto => {
-        servicioContacto
+      contactos.forEach((contacto) => {
+        ContactoService
           .sumar(contacto)
-          .then(response => {
+          .then((response) => {
             console.log(response.data);
           })
           .catch(() => console.log("No se pudo agregar el contacto"));
@@ -324,7 +326,7 @@ function Contactos() {
   const unirResults = () => {
     let res = [];
     for (let i = 0; i <= results.length - 1; i++) {
-      res[i] = {...results[i], ...resultBaj[i], canales: "sí"};
+      res[i] = { ...results[i], ...resultBaj[i], canales: "sí" };
     }
     return res;
   };
@@ -439,7 +441,9 @@ function Contactos() {
 
             {descargarAlgunos && (
               <ContactosDescargar
-                datos={juntados.filter(item => idsTildados.includes(item._id))}
+                datos={juntados.filter((item) =>
+                  idsTildados.includes(item._id)
+                )}
               />
             )}
           </div>

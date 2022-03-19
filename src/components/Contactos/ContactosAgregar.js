@@ -1,101 +1,97 @@
-import servicioContacto from "../../services/Contacto_servicio";
-import servicioEmpresa from "../../services/Empresa_servicio";
-import servicioUbicacion from "../../services/Ubicacion_servicio";
-import {useState, useEffect, useRef} from "react";
+import ContactoService from "../../services/ContactoService";
+import EmpresaService from "../../services/EmpresaService";
+import UbicacionService from "../../services/UbicacionService";
+import { useState, useEffect, useRef } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 
 function ContactosAgregar(props) {
-  
   const [listaEmpresas, setListaEmpresas] = useState([]);
-
-
 
   const [entrada, setEntrada] = useState(props.entrada);
 
   useEffect(() => {
-    servicioEmpresa
+    EmpresaService
       .listar()
-      .then(data => {
+      .then((data) => {
         setListaEmpresas(data.data);
       })
       .catch(() => console.log("No se pudo traer la información"));
   }, []);
 
-  const elegirListaEmpresas = listaEmpresas.map(item => {
+  const elegirListaEmpresas = listaEmpresas.map((item) => {
     return <option key={item.nombre}>{item.nombre}</option>;
   });
 
   const [listaUbicaciones, setListaUbicaciones] = useState([]);
 
   useEffect(() => {
-    servicioUbicacion
+    UbicacionService
       .listar()
-      .then(data => {
+      .then((data) => {
         setListaUbicaciones(data.data);
       })
       .catch(() => console.log("No se pudo traer la información"));
   }, []);
 
-  const regiones = new Set(listaUbicaciones.map(item => item.region));
+  const regiones = new Set(listaUbicaciones.map((item) => item.region));
 
-  const elegirListaRegiones = Array.from(regiones).map(item => {
+  const elegirListaRegiones = Array.from(regiones).map((item) => {
     return <option key={item}>{item}</option>;
   });
 
   const paisRef = useRef(null);
 
-  const manejarElegirRegion = e => {
+  const manejarElegirRegion = (e) => {
     e.target.value !== ""
       ? (paisRef.current.disabled = false)
       : (paisRef.current.disabled = true);
-    setEntrada({...entrada, region: e.target.value, pais: "", ciudad: ""});
+    setEntrada({ ...entrada, region: e.target.value, pais: "", ciudad: "" });
   };
 
   const paises = new Set(
     listaUbicaciones
-      .filter(item => item.region === entrada.region)
-      .map(item => item.pais)
+      .filter((item) => item.region === entrada.region)
+      .map((item) => item.pais)
   );
 
-  const elegirListaPaises = Array.from(paises).map(item => {
+  const elegirListaPaises = Array.from(paises).map((item) => {
     return <option key={item}>{item}</option>;
   });
 
-  const manejarElegirPais = e => {
+  const manejarElegirPais = (e) => {
     e.target.value !== ""
       ? (ciudadRef.current.disabled = false)
       : (ciudadRef.current.disabled = true);
-    setEntrada({...entrada, pais: e.target.value});
+    setEntrada({ ...entrada, pais: e.target.value });
   };
 
   const ciudadRef = useRef(null);
 
   const ciudades = listaUbicaciones
-    .filter(item => item.pais === entrada.pais)
-    .map(item => item.ciudad);
+    .filter((item) => item.pais === entrada.pais)
+    .map((item) => item.ciudad);
 
-  const elegirListaCiudades = ciudades.map(item => {
+  const elegirListaCiudades = ciudades.map((item) => {
     return <option key={item}>{item}</option>;
   });
 
-  const manejarInput = event => {
-    const {name, value} = event.target;
-    setEntrada({...entrada, [name]: value});
+  const manejarInput = (event) => {
+    const { name, value } = event.target;
+    setEntrada({ ...entrada, [name]: value });
   };
-
 
   const [valoresCanales, setValoresCanales] = useState(props.canales);
 
   const manejarInputCanales = (event, i) => {
-    const {name, value} = event.target;
+    const { name, value } = event.target;
     let actualizado = [...valoresCanales];
     actualizado[i][name] = value;
     setValoresCanales(actualizado);
   };
 
-  const guardarContacto = e => {
+  const guardarContacto = (e) => {
     e.preventDefault();
     const data = {
       nombre: entrada.nombre,
@@ -109,36 +105,36 @@ function ContactosAgregar(props) {
       interes: entrada.interes,
       canales: [...valoresCanales],
       canalPreferido: valoresCanales.filter(
-        item => item.preferencia === "Canal preferido"
+        (item) => item.preferencia === "Canal preferido"
       )[0].canal,
     };
-    if (!props.editar){
-    try {
-    servicioContacto
-      .sumar(data)
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(() => console.log("No se pudo agregar el contacto"));
-    } catch {
-      console.log("No se pudo agregar");
-    } finally {
-      window.location.reload();
-    }
-  } else {
-    try {
-      servicioContacto
-        .actualizar(entrada.id, data)
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(() => console.log("No se pudo actualizar el contacto"));
+    if (!props.editar) {
+      try {
+        ContactoService
+          .sumar(data)
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch(() => console.log("No se pudo agregar el contacto"));
+      } catch {
+        console.log("No se pudo agregar");
+      } finally {
+        window.location.reload();
+      }
+    } else {
+      try {
+        ContactoService
+          .actualizar(entrada.id, data)
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch(() => console.log("No se pudo actualizar el contacto"));
       } catch {
         console.log("No se pudo actualizar");
       } finally {
         window.location.reload();
       }
-  }
+    }
   };
 
   const [cantidadCanales, setCantidadCanales] = useState(props.cantCanales);
@@ -150,9 +146,10 @@ function ContactosAgregar(props) {
         <Form.Control
           as="select"
           value={valoresCanales[i].canal}
-          onChange={e => manejarInputCanales(e, i)}
+          onChange={(e) => manejarInputCanales(e, i)}
           name={"canal"}
-          required>
+          required
+        >
           <option></option>
           <option>Whatsapp</option>
           <option>Teléfono</option>
@@ -164,16 +161,18 @@ function ContactosAgregar(props) {
         <Form.Control
           type="text"
           value={valoresCanales[i].cuenta}
-          onChange={e => manejarInputCanales(e, i)}
+          onChange={(e) => manejarInputCanales(e, i)}
           name={`cuenta`}
-          required></Form.Control>
+          required
+        ></Form.Control>
         <Form.Label>Preferencia: </Form.Label>
-        <Form.Control 
+        <Form.Control
           as="select"
           value={valoresCanales[i].preferencia}
-          onChange={e => manejarInputCanales(e, i)}
+          onChange={(e) => manejarInputCanales(e, i)}
           name={`preferencia`}
-          required>
+          required
+        >
           <option></option>
           <option>No molestar</option>
           <option>Sin preferencia</option>
@@ -184,13 +183,13 @@ function ContactosAgregar(props) {
   });
 
   const agregarCanal = () => {
-    if (cantidadCanales.length <5) {
-    setCantidadCanales([...cantidadCanales, 1]);
-    setValoresCanales([
-      ...valoresCanales,
-      {canal: "", cuenta: "", preferencia: ""},
-    ]);
-  }
+    if (cantidadCanales.length < 5) {
+      setCantidadCanales([...cantidadCanales, 1]);
+      setValoresCanales([
+        ...valoresCanales,
+        { canal: "", cuenta: "", preferencia: "" },
+      ]);
+    }
   };
 
   const removerCanal = () => {
@@ -202,163 +201,174 @@ function ContactosAgregar(props) {
   return (
     <div>
       <div>
-      <h1>Agregar Contacto:</h1>
-      <Form inline onSubmit={guardarContacto}>
-        <Col md={10}>
-        <h2>Nombre y Compañía</h2>
-          <Form.Group>
-            <Form.Label>Nombre: </Form.Label>
-            <Form.Control
-              type="text"
-              value={entrada.nombre}
-              onChange={manejarInput}
-              name="nombre"
-              required></Form.Control>
-            <Form.Label>Apellido: </Form.Label>
-            <Form.Control
-              type="text"
-              value={entrada.apellido}
-              onChange={manejarInput}
-              name="apellido"
-              required></Form.Control>
-            <Form.Label>Cargo: </Form.Label>
-            <Form.Control
-              type="text"
-              value={entrada.cargo}
-              onChange={manejarInput}
-              name="cargo"
-              required></Form.Control>
-                        </Form.Group>
-
-</Col>
-                      <Col md={10}>
-                      <Form.Group>
-
-            <Form.Label>Email: </Form.Label>
-            <Form.Control
-              type="text"
-              value={entrada.email}
-              onChange={manejarInput}
-              name="email"
-              required></Form.Control>
-            <Form.Label>Compañía: </Form.Label>
-            <Form.Control
-              as="select"
-              value={entrada.empresa}
-              onChange={manejarInput}
-              name="empresa"
-              required>
-              <option></option>
-              {elegirListaEmpresas}
-            </Form.Control>
-          </Form.Group>
-        </Col>
-
-        <Col md={10}>
-        <h2>Ubicación e interés</h2>
-          <Form.Group>
-            <Form.Label>Región: </Form.Label>
-            <Form.Control
-              as="select"
-              value={entrada.region}
-              onChange={manejarElegirRegion}
-              name="region"
-              required>
-              <option></option>
-              {elegirListaRegiones}
-            </Form.Control>
-            <Form.Label>País: </Form.Label>
-            <Form.Control
-              as="select"
-              value={entrada.pais}
-              onChange={manejarElegirPais}
-              name="pais"
-              ref={paisRef}
-              required
-              disabled>
-              <option></option>
-              {elegirListaPaises}
-            </Form.Control>
-            <Form.Label>Ciudad: </Form.Label>
-            <Form.Control
-              as="select"
-              value={entrada.ciudad}
-              onChange={manejarInput}
-              name="ciudad"
-              ref={ciudadRef}
-              required
-              disabled>
-              <option></option>
-
-              {elegirListaCiudades}
-            </Form.Control>
+        <h1>Agregar Contacto:</h1>
+        <Form inline onSubmit={guardarContacto}>
+          <Col md={10}>
+            <h2>Nombre y Compañía</h2>
+            <Form.Group>
+              <Form.Label>Nombre: </Form.Label>
+              <Form.Control
+                type="text"
+                value={entrada.nombre}
+                onChange={manejarInput}
+                name="nombre"
+                required
+              ></Form.Control>
+              <Form.Label>Apellido: </Form.Label>
+              <Form.Control
+                type="text"
+                value={entrada.apellido}
+                onChange={manejarInput}
+                name="apellido"
+                required
+              ></Form.Control>
+              <Form.Label>Cargo: </Form.Label>
+              <Form.Control
+                type="text"
+                value={entrada.cargo}
+                onChange={manejarInput}
+                name="cargo"
+                required
+              ></Form.Control>
             </Form.Group>
-
-</Col>
-                      <Col md={10}>
-                      <Form.Group>
-            <Form.Label>Dirección: </Form.Label>
-            <Form.Control
-              type="text"
-              value={entrada.direccion}
-              onChange={manejarInput}
-              name="direccion"
-              required></Form.Control>
-            <Form.Label>Interés: </Form.Label>
-            <Col md={2}>
+          </Col>
+          <Col md={10}>
+            <Form.Group>
+              <Form.Label>Email: </Form.Label>
               <Form.Control
-                type="range"
-                min="0"
-                max="100"
-                step="25"
-                value={entrada.interes}
+                type="text"
+                value={entrada.email}
                 onChange={manejarInput}
-                name="interes"
-                required></Form.Control>
-            </Col>
-
-            <Col>
+                name="email"
+                required
+              ></Form.Control>
+              <Form.Label>Compañía: </Form.Label>
               <Form.Control
-                type="number"
-                min="0"
-                max="100"
-                step="25"
-                value={entrada.interes}
+                as="select"
+                value={entrada.empresa}
                 onChange={manejarInput}
-                name="interes"
-                required></Form.Control>
-            </Col>
-          </Form.Group>
-        </Col>
+                name="empresa"
+                required
+              >
+                <option></option>
+                {elegirListaEmpresas}
+              </Form.Control>
+            </Form.Group>
+          </Col>
 
-        <Col md={10}>
-        <Form.Group>
-        <h2>Canales de contacto</h2>{"\t"}        
-          <Button size="sm" className="botonSeparadoHor" onClick={agregarCanal}>Agregar canal</Button>{"   "}
-          <Button size="sm" variant="warning" onClick={removerCanal}>Quitar canal</Button>
-          {CanalesContacto}
-</Form.Group>
+          <Col md={10}>
+            <h2>Ubicación e interés</h2>
+            <Form.Group>
+              <Form.Label>Región: </Form.Label>
+              <Form.Control
+                as="select"
+                value={entrada.region}
+                onChange={manejarElegirRegion}
+                name="region"
+                required
+              >
+                <option></option>
+                {elegirListaRegiones}
+              </Form.Control>
+              <Form.Label>País: </Form.Label>
+              <Form.Control
+                as="select"
+                value={entrada.pais}
+                onChange={manejarElegirPais}
+                name="pais"
+                ref={paisRef}
+                required
+                disabled
+              >
+                <option></option>
+                {elegirListaPaises}
+              </Form.Control>
+              <Form.Label>Ciudad: </Form.Label>
+              <Form.Control
+                as="select"
+                value={entrada.ciudad}
+                onChange={manejarInput}
+                name="ciudad"
+                ref={ciudadRef}
+                required
+                disabled
+              >
+                <option></option>
 
+                {elegirListaCiudades}
+              </Form.Control>
+            </Form.Group>
+          </Col>
+          <Col md={10}>
+            <Form.Group>
+              <Form.Label>Dirección: </Form.Label>
+              <Form.Control
+                type="text"
+                value={entrada.direccion}
+                onChange={manejarInput}
+                name="direccion"
+                required
+              ></Form.Control>
+              <Form.Label>Interés: </Form.Label>
+              <Col md={2}>
+                <Form.Control
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="25"
+                  value={entrada.interes}
+                  onChange={manejarInput}
+                  name="interes"
+                  required
+                ></Form.Control>
+              </Col>
 
-        </Col>
+              <Col>
+                <Form.Control
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="25"
+                  value={entrada.interes}
+                  onChange={manejarInput}
+                  name="interes"
+                  required
+                ></Form.Control>
+              </Col>
+            </Form.Group>
+          </Col>
 
-        <Col md={10}>
-        <div className="centradoSeparado">
+          <Col md={10}>
+            <Form.Group>
+              <h2>Canales de contacto</h2>
+              {"\t"}
+              <Button
+                size="sm"
+                className="botonSeparadoHor"
+                onClick={agregarCanal}
+              >
+                Agregar canal
+              </Button>
+              {"   "}
+              <Button size="sm" variant="warning" onClick={removerCanal}>
+                Quitar canal
+              </Button>
+              {CanalesContacto}
+            </Form.Group>
+          </Col>
 
-        <Button variant="secondary" onClick={props.cancelar}>
-              Cancelar y regresar al listado
-            </Button>
-            {" "}
-
-            <Button type="submit" size="lg">Guardar</Button>
-</div>
-        </Col>
-
-
-      </Form> </div>
-
-
-
+          <Col md={10}>
+            <div className="centradoSeparado">
+              <Button variant="secondary" onClick={props.cancelar}>
+                Cancelar y regresar al listado
+              </Button>{" "}
+              <Button type="submit" size="lg">
+                Guardar
+              </Button>
+            </div>
+          </Col>
+        </Form>{" "}
+      </div>
     </div>
   );
 }

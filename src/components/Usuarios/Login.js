@@ -1,12 +1,11 @@
-import servicioUsuario from "../../services/Usuario_servicio";
-import {useState, useEffect} from "react";
+import UsuarioService from "../../services/UsuarioService";
+import { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import jwt_decode from "jwt-decode";
 
 function Login() {
-
   useEffect(() => {
     try {
       let token = JSON.parse(sessionStorage.getItem("JWT"));
@@ -19,7 +18,6 @@ function Login() {
     }
   }, []);
 
-
   const valorInicialLog = {
     email: "",
     password: "",
@@ -27,26 +25,26 @@ function Login() {
 
   const [entradaLog, setEntradaLog] = useState(valorInicialLog);
 
-  const manejarInputLog = event => {
-    const {name, value} = event.target;
-    setEntradaLog({...entradaLog, [name]: value});
+  const manejarInputLog = (event) => {
+    const { name, value } = event.target;
+    setEntradaLog({ ...entradaLog, [name]: value });
   };
 
-  const loguearUsuario = e => {
+  const loguearUsuario = (e) => {
     e.preventDefault();
     const data = {
       email: entradaLog.email,
       password: entradaLog.password,
     };
-    servicioUsuario
+    UsuarioService
       .loguear(data)
-      .then(response => {
-        console.log(response)
+      .then((response) => {
+        console.log(response);
         let token = response.data;
         sessionStorage.setItem("JWT", JSON.stringify(token));
         window.location.reload();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
         alert("Datos incorrectos, reintente");
       });
@@ -66,14 +64,16 @@ function Login() {
                   value={entradaLog.email}
                   onChange={manejarInputLog}
                   name="email"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>Password: </Form.Label>
                 <Form.Control
                   type="password"
                   value={entradaLog.password}
                   onChange={manejarInputLog}
                   name="password"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
               </Form.Group>
               <Button className="bloqueCentrado" type="submit" size="lg">
                 Loguear

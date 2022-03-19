@@ -2,7 +2,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 
 function ContactosBuscador(props) {
-  const filtrador = e => {
+  const filtrador = (e) => {
     props.onChange(e.target.value);
   };
 
@@ -17,7 +17,8 @@ function ContactosBuscador(props) {
               value={props.busqueda}
               onChange={filtrador}
               name="nombre"
-              required></Form.Control>
+              required
+            ></Form.Control>
           </Form.Group>
         </Col>
       </Form>

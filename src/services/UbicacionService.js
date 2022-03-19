@@ -1,6 +1,6 @@
 import http from "../http-common";
 
-class servicioUbicacion {
+class UbicacionService {
   sumar(data) {
     return http.post("/ubicacion", data);
   }
@@ -22,4 +22,4 @@ class servicioUbicacion {
   }
 }
 
-export default new servicioUbicacion();
+export default new UbicacionService();

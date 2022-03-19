@@ -1,7 +1,6 @@
 import http from "../http-common";
 
-class servicioEmpresa {
-
+class EmpresaService {
   sumar(data) {
     return http.post("/empresa", data);
   }
@@ -23,4 +22,4 @@ class servicioEmpresa {
   }
 }
 
-export default new servicioEmpresa();
+export default new EmpresaService();

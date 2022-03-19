@@ -1,13 +1,13 @@
 import { CIUDADES, EMPRESAS, CONTACTOS } from "./DatosInicio";
-import servicioUbicacion from "../services/Ubicacion_servicio.js";
-import servicioEmpresa from "../services/Empresa_servicio.js";
-import servicioContacto from "../services/Contacto_servicio.js";
+import UbicacionService from "../services/UbicacionService.js";
+import EmpresaService from "../services/EmpresaService.js";
+import ContactoService from "../services/ContactoService.js";
 
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 
 import { useState } from "react";
-import excel from "../media/EjemploContactos.xlsx";
+import excel from "../assets/EjemploContactos.xlsx";
 
 function Config() {
   const [show, setShow] = useState(true);
@@ -22,7 +22,7 @@ function Config() {
           pais: ciudadEjemplo.pais,
           ciudad: ciudadEjemplo.ciudad,
         };
-        servicioUbicacion.sumar(ciudad).then((res) => console.log(res));
+        UbicacionService.sumar(ciudad).then((res) => console.log(res));
       });
       EMPRESAS.forEach((empresaEjemplo) => {
         const ciudad = {
@@ -33,7 +33,7 @@ function Config() {
           email: empresaEjemplo.email,
           telefono: empresaEjemplo.telefono,
         };
-        servicioEmpresa.sumar(ciudad).then((res) => console.log(res));
+        EmpresaService.sumar(ciudad).then((res) => console.log(res));
       });
       CONTACTOS.forEach((contactoEjemplo) => {
         const ciudad = {
@@ -50,33 +50,33 @@ function Config() {
           interes: contactoEjemplo.interes,
           canales: contactoEjemplo.canales,
         };
-        servicioContacto.sumar(ciudad).then((res) => console.log(res));
+        ContactoService.sumar(ciudad).then((res) => console.log(res));
         setAlertMessage("Se han cargado los datos");
-        setAlertType("success")
-        setShow(true)
+        setAlertType("success");
+        setShow(true);
       });
     } catch {
       setAlertMessage("No se pudieron cargar los datos de ejemplo");
-      setAlertType("danger")
-      setShow(true)
+      setAlertType("danger");
+      setShow(true);
     }
   };
 
   const Borrador = () => {
     try {
-      servicioUbicacion.borrarTodo().then((res) => console.log(res));
-      servicioEmpresa.borrarTodo().then((res) => {
+      UbicacionService.borrarTodo().then((res) => console.log(res));
+      EmpresaService.borrarTodo().then((res) => {
         console.log(res);
         console.log(res.data.ok);
       });
-      servicioContacto.borrarTodo().then((res) => console.log(res));
+      ContactoService.borrarTodo().then((res) => console.log(res));
       setAlertMessage("Se han borrado todos los datos");
-      setAlertType("success")
-      setShow(true)
+      setAlertType("success");
+      setShow(true);
     } catch {
       setAlertMessage("No se pudieron borrar los datos");
-      setAlertType("danger")
-      setShow(true)
+      setAlertType("danger");
+      setShow(true);
     }
   };
 
@@ -94,13 +94,12 @@ function Config() {
   return (
     <div className="centrarContenidos">
       <h1>Configuración</h1>
-      {show &&
-      <Alert variant={alertType} onClose={() => setShow(false)} dismissible>
-        <Alert.Heading>Novedades</Alert.Heading>
-        <p>
-          {alertMessage}
-        </p>
-      </Alert>}
+      {show && (
+        <Alert variant={alertType} onClose={() => setShow(false)} dismissible>
+          <Alert.Heading>Novedades</Alert.Heading>
+          <p>{alertMessage}</p>
+        </Alert>
+      )}
       <Button variant="warning" onClick={Cargador}>
         Cargar datos de prueba
       </Button>{" "}

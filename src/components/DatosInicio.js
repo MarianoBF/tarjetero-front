@@ -59,7 +59,7 @@ export const EMPRESAS = [
 ];
 
 export const CONTACTOS = [
-    {
+  {
     nombre: "Juan",
     apellido: "Pérez",
     email: "dasdasdadasdas@dasdasd.com",
@@ -70,38 +70,41 @@ export const CONTACTOS = [
     empresa: "Empresa CC",
     cargo: "Director de Compras",
     canalPreferido: "Whatsapp",
-    canales: [{
-      canal: "Whatsapp",
-      cuenta: "31231231232",
-      preferencia: "Canal preferido"
-    }],
+    canales: [
+      {
+        canal: "Whatsapp",
+        cuenta: "31231231232",
+        preferencia: "Canal preferido",
+      },
+    ],
     interes: "25",
-},
-{
+  },
+  {
     nombre: "Juan",
     apellido: "Garcia",
     empresa: "Empresa AA",
-    email: "dasdas@dasdasd.com", 
+    email: "dasdas@dasdasd.com",
     direccion: "Av. Paulista 500",
     cargo: "Gerente de Compras",
     region: "América del Sur",
     pais: "Brasil",
     ciudad: "San Pablo",
     interes: "50",
-    canales: [{
-      canal: "Email",
-      cuenta: "dasdas@dasdasd.com",
-      preferencia: "No molestar"
-    },
-    {
-      canal: "Teléfono",
-      cuenta: "5656456564",
-      preferencia: "Canal preferido"
-    },
-  ],
+    canales: [
+      {
+        canal: "Email",
+        cuenta: "dasdas@dasdasd.com",
+        preferencia: "No molestar",
+      },
+      {
+        canal: "Teléfono",
+        cuenta: "5656456564",
+        preferencia: "Canal preferido",
+      },
+    ],
     canalPreferido: "Teléfono",
-},
-{
+  },
+  {
     nombre: "Juan",
     apellido: "Gómez",
     email: "dasdasdadasdas@dasdasd.com",
@@ -113,21 +116,22 @@ export const CONTACTOS = [
     cargo: "Gerente de Finanzas",
     canalPreferido: "Email",
     interes: "100",
-    canales: [{
-      canal: "Email",
-      cuenta: "dasdas@dsadasd.com",
-      preferencia: "Canal preferido"
-    },{
-      canal: "Email",
-      cuenta: "13deswda@dasdaa.com",
-      preferencia: "Sin preferencia"
-    },
-    {
-      canal: "Teléfono",
-      cuenta: "5656456564",
-      preferencia: "Sin preferencia"
-    },
-  ],
-},
-]
-
+    canales: [
+      {
+        canal: "Email",
+        cuenta: "dasdas@dsadasd.com",
+        preferencia: "Canal preferido",
+      },
+      {
+        canal: "Email",
+        cuenta: "13deswda@dasdaa.com",
+        preferencia: "Sin preferencia",
+      },
+      {
+        canal: "Teléfono",
+        cuenta: "5656456564",
+        preferencia: "Sin preferencia",
+      },
+    ],
+  },
+];

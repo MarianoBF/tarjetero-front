@@ -1,7 +1,6 @@
 import http from "../http-common";
 
-class servicioContacto {
-
+class ContactoService {
   sumar(data) {
     return http.post("/contacto", data);
   }
@@ -10,7 +9,7 @@ class servicioContacto {
     return http.get("/contactos");
   }
   actualizar(id, data) {
-    return http.put("/contacto/"+id, data);
+    return http.put("/contacto/" + id, data);
   }
 
   borrar(empresa) {
@@ -20,7 +19,6 @@ class servicioContacto {
   borrarTodo() {
     return http.delete("/contactos");
   }
-
 }
 
-export default new servicioContacto();
+export default new ContactoService();

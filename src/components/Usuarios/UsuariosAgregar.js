@@ -1,5 +1,5 @@
-import servicioUsuario from "../../services/Usuario_servicio";
-import {useState} from "react";
+import UsuarioService from "../../services/UsuarioService";
+import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
@@ -7,12 +7,12 @@ import Col from "react-bootstrap/Col";
 function UsuariosAgregar(props) {
   const [entrada, setEntrada] = useState(props.entrada);
 
-  const manejarInput = event => {
-    const {name, value} = event.target;
-    setEntrada({...entrada, [name]: value});
+  const manejarInput = (event) => {
+    const { name, value } = event.target;
+    setEntrada({ ...entrada, [name]: value });
   };
 
-  const guardarUsuario = e => {
+  const guardarUsuario = (e) => {
     e.preventDefault();
     if (!props.editar) {
       if (entrada.password !== entrada.confirmarPassword) {
@@ -27,18 +27,18 @@ function UsuariosAgregar(props) {
       perfil: entrada.perfil,
     };
     if (!props.editar) {
-      servicioUsuario
+      UsuarioService
         .sumar(data)
-        .then(response => {
+        .then((response) => {
           console.log(response.data);
           alert("Usuario creado con éxito!");
           window.location.reload();
         })
         .catch(() => console.log("No se pudo agregar el usuario"));
     } else {
-      servicioUsuario
+      UsuarioService
         .actualizar(entrada.id, data)
-        .then(response => {
+        .then((response) => {
           console.log(response.data);
           alert("Usuario actualizado con éxito!");
           window.location.reload();
@@ -64,21 +64,24 @@ function UsuariosAgregar(props) {
                 value={entrada.nombre}
                 onChange={manejarInput}
                 name="nombre"
-                required></Form.Control>
+                required
+              ></Form.Control>
               <Form.Label>Apellido: </Form.Label>
               <Form.Control
                 type="text"
                 value={entrada.apellido}
                 onChange={manejarInput}
                 name="apellido"
-                required></Form.Control>
+                required
+              ></Form.Control>
               <Form.Label>Email: </Form.Label>
               <Form.Control
                 type="text"
                 value={entrada.email}
                 onChange={manejarInput}
                 name="email"
-                required></Form.Control>
+                required
+              ></Form.Control>
               <Form.Label>Password: </Form.Label>
               <Form.Control
                 type="password"
@@ -86,21 +89,24 @@ function UsuariosAgregar(props) {
                 onChange={manejarInput}
                 name="password"
                 autoComplete="new-password"
-                required></Form.Control>
+                required
+              ></Form.Control>
               <Form.Label>Confirmar Password: </Form.Label>
               <Form.Control
                 type="password"
                 value={entrada.confirmarPassword}
                 onChange={manejarInput}
                 name="confirmarPassword"
-                required></Form.Control>{" "}
+                required
+              ></Form.Control>{" "}
               <Form.Label>Perfil: </Form.Label>
               <Form.Control
                 as="select"
                 value={entrada.perfil}
                 onChange={manejarInput}
                 name="perfil"
-                required>
+                required
+              >
                 <option></option>
                 <option>Básico</option>
                 <option>Admin</option>
@@ -113,7 +119,8 @@ function UsuariosAgregar(props) {
             <Button
               className="bloqueCentrado"
               onClick={props.cancelar}
-              variant="danger">
+              variant="danger"
+            >
               Cancelar
             </Button>
           </Col>

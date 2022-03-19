@@ -1,12 +1,11 @@
-import servicioUbicacion from "../services/Ubicacion_servicio";
-import {useState, useEffect} from "react";
+import UbicacionService from "../services/UbicacionService";
+import { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
-import borrar from "../media/borrar.svg";
-import editar from "../media/editar.svg";
-
+import borrar from "../assets/borrar.svg";
+import editar from "../assets/editar.svg";
 
 function Ubicacion() {
   const [lista, setLista] = useState([]);
@@ -14,9 +13,9 @@ function Ubicacion() {
   const [modoEditar, setModoEditar] = useState(false);
 
   useEffect(() => {
-    servicioUbicacion
+    UbicacionService
       .listar()
-      .then(data => {
+      .then((data) => {
         setLista(data.data);
       })
       .catch(() => console.log("No se pudo traer la información"));
@@ -31,14 +30,14 @@ function Ubicacion() {
   const [entrada, setEntrada] = useState(valorInicial);
   const [entradaEditar, setEntradaEditar] = useState(valorInicial);
 
-  const manejarInput = event => {
-    const {name, value} = event.target;
-    setEntrada({...entrada, [name]: value});
+  const manejarInput = (event) => {
+    const { name, value } = event.target;
+    setEntrada({ ...entrada, [name]: value });
   };
 
-  const manejarInputEdit = event => {
-    const {name, value} = event.target;
-    setEntradaEditar({...entradaEditar, [name]: value});
+  const manejarInputEdit = (event) => {
+    const { name, value } = event.target;
+    setEntradaEditar({ ...entradaEditar, [name]: value });
   };
 
   const manejarAgregar = () => {
@@ -57,9 +56,9 @@ function Ubicacion() {
     });
   };
 
-  const manejarBorrar = ciudad => {
+  const manejarBorrar = (ciudad) => {
     try {
-      servicioUbicacion.borrar(ciudad);
+      UbicacionService.borrar(ciudad);
     } catch {
       console.log("No se pudo borrar la ubicación");
     } finally {
@@ -71,9 +70,9 @@ function Ubicacion() {
     setEntrada();
     setModoEditar(false);
     setModoAgregar(false);
-  }
+  };
 
-  const editarUbicacion = e => {
+  const editarUbicacion = (e) => {
     e.preventDefault();
     const data = {
       region: entradaEditar.region,
@@ -81,9 +80,9 @@ function Ubicacion() {
       ciudad: entradaEditar.ciudad,
     };
     try {
-      servicioUbicacion
+      UbicacionService
         .actualizar(data)
-        .then(response => {
+        .then((response) => {
           console.log(response.data);
         })
         .catch(() => console.log("No se pudo agregar la ubicación"));
@@ -94,7 +93,7 @@ function Ubicacion() {
     }
   };
 
-  const sumarUbicacion = e => {
+  const sumarUbicacion = (e) => {
     e.preventDefault();
     const data = {
       region: entrada.region,
@@ -102,7 +101,7 @@ function Ubicacion() {
       ciudad: entrada.ciudad,
     };
     try {
-      servicioUbicacion.sumar(data).then(response => {
+      UbicacionService.sumar(data).then((response) => {
         console.log(response.data);
       });
     } catch {
@@ -137,18 +136,24 @@ function Ubicacion() {
           <td>{item.ciudad}</td>
           <td>
             {
-              <div className="centrarContenidos clickeable"
+              <div
+                className="centrarContenidos clickeable"
                 onClick={() =>
                   manejarEditar(item.region, item.pais, item.ciudad)
-                }>
-                              <img className="icon" src={editar} alt="editar" />
-
+                }
+              >
+                <img className="icon" src={editar} alt="editar" />
               </div>
             }
           </td>
           <td>
             {
-              <div className="centrarContenidos clickeable" onClick={() => manejarBorrar(item.ciudad)}><img className="icon" src={borrar} alt="borrar" /></div>
+              <div
+                className="centrarContenidos clickeable"
+                onClick={() => manejarBorrar(item.ciudad)}
+              >
+                <img className="icon" src={borrar} alt="borrar" />
+              </div>
             }
           </td>
         </tr>
@@ -157,14 +162,14 @@ function Ubicacion() {
 
   return (
     <div>
-    {!modoAgregar && !modoEditar &&
-         <div className="tituloCompartido">
-
-      <h1>Ubicaciones: Región - País - Ciudad</h1>
-       <Button variant="primary" onClick={manejarAgregar}>Agregar</Button>
-
-    </div>
-}
+      {!modoAgregar && !modoEditar && (
+        <div className="tituloCompartido">
+          <h1>Ubicaciones: Región - País - Ciudad</h1>
+          <Button variant="primary" onClick={manejarAgregar}>
+            Agregar
+          </Button>
+        </div>
+      )}
       {!modoAgregar && !modoEditar ? (
         <div>
           <Table striped bordered>
@@ -193,14 +198,16 @@ function Ubicacion() {
                   value={entrada.region}
                   onChange={manejarInput}
                   name="region"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>País: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entrada.pais}
                   onChange={manejarInput}
                   name="pais"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>Ciudad: </Form.Label>
 
                 <Form.Control
@@ -208,11 +215,14 @@ function Ubicacion() {
                   value={entrada.ciudad}
                   onChange={manejarInput}
                   name="ciudad"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
               </Form.Group>
             </Col>
             <Button type="submit">Agregar</Button>{" "}
-            <Button onClick={manejarCancelar} variant="danger">Cancelar</Button>
+            <Button onClick={manejarCancelar} variant="danger">
+              Cancelar
+            </Button>
           </Form>
         </div>
       ) : null}
@@ -228,26 +238,30 @@ function Ubicacion() {
                   value={entradaEditar.region}
                   onChange={manejarInputEdit}
                   name="region"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>País: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entradaEditar.pais}
                   onChange={manejarInputEdit}
                   name="pais"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
                 <Form.Label>Ciudad: </Form.Label>
                 <Form.Control
                   type="text"
                   value={entradaEditar.ciudad}
                   onChange={manejarInputEdit}
                   name="ciudad"
-                  required></Form.Control>
+                  required
+                ></Form.Control>
               </Form.Group>
             </Col>
             <Button type="submit">Guardar</Button>{" "}
-            <Button onClick={manejarCancelar} variant="danger">Cancelar</Button>
-
+            <Button onClick={manejarCancelar} variant="danger">
+              Cancelar
+            </Button>
           </Form>
         </div>
       ) : null}
