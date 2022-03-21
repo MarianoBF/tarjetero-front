@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import jwt_decode from "jwt-decode";
+import Alert from "react-bootstrap/Alert";
 
 function Login() {
   useEffect(() => {
@@ -30,6 +31,8 @@ function Login() {
     setEntradaLog({ ...entradaLog, [name]: value });
   };
 
+  const [show, setShow] = useState(false);
+
   const loguearUsuario = (e) => {
     e.preventDefault();
     const data = {
@@ -46,7 +49,7 @@ function Login() {
       })
       .catch((error) => {
         console.log(error);
-        alert("Datos incorrectos, reintente");
+        setShow(true);
       });
   };
 
@@ -54,6 +57,12 @@ function Login() {
     <div className="centrarContenidos">
       {
         <div>
+        {show && (
+        <Alert variant="danger" onClose={() => setShow(false)} dismissible>
+          <Alert.Heading>Novedades</Alert.Heading>
+          <p>{"Datos incorrectos, reintente"}</p>
+        </Alert>
+      )}
           <h1>Loguearse:</h1>
           <Form onSubmit={loguearUsuario}>
             <Col md={6} className="bloqueCentrado">
