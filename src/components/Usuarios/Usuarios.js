@@ -1,5 +1,5 @@
 import UsuarioService from "../../services/UsuarioService";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import jwt_decode from "jwt-decode";
@@ -26,16 +26,15 @@ function Usuarios() {
 
   const [listadoUsuarios, setListadoUsuarios] = useState([]);
 
-  const manejarBorrar = id => {
-    UsuarioService.borrar(id);
-    window.location.reload();
+  const manejarBorrar = (id) => {
+    UsuarioService.borrar(id).then((_) => window.location.reload());
   };
 
   const [modoEditar, setModoEditar] = useState(false);
 
   const [entradaEditar, setEntradaEditar] = useState();
 
-  const manejarEditar = item => {
+  const manejarEditar = (item) => {
     setModoEditar(true);
     setEntradaEditar(item);
   };
@@ -71,9 +70,8 @@ function Usuarios() {
     });
 
   useEffect(() => {
-    UsuarioService
-      .listar()
-      .then(data => {
+    UsuarioService.listar()
+      .then((data) => {
         setListadoUsuarios(data.data);
       })
       .catch(() => console.log("No se pudo traer la información"));
