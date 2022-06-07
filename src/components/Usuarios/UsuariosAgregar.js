@@ -37,7 +37,7 @@ function UsuariosAgregar(props) {
         .catch(() => console.log("No se pudo agregar el usuario"));
     } else {
       UsuarioService
-        .actualizar(entrada.id, data)
+        .actualizar(entrada._id, data)
         .then((response) => {
           console.log(response.data);
           alert("Usuario actualizado con éxito!");
